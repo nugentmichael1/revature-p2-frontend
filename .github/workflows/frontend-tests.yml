@@ -14,11 +14,10 @@ jobs:
       pull-requests: write
 
     steps:
-      # Checkout main branch for comparison code
-      - name: Checkout main branch for comparison code
+      # Checkout PR branch
+      - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          ref: 'main'
           fetch-depth: 1
 
       # Set up Node.js
@@ -31,35 +30,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-
-      # Generate coverage for the main branch
-      - name: Generate coverage for the main branch
-        run: |
-          npm run coverage
-          # Upload the coverage report as an artifact
-          mkdir -p coverage
-          
-          # Check if coverage-summary.json exists and move it; fallback to coverage-final.json
-          if [ -f ./coverage/coverage-summary.json ]; then
-            mv ./coverage/coverage-summary.json coverage/coverage-main.json
-          elif [ -f ./coverage/coverage-final.json ]; then
-            mv ./coverage/coverage-final.json coverage/coverage-main.json
-          else
-            echo "No coverage summary file found!"
-            exit 1
-          fi
-
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-main
-          path: ${{ github.workspace }}/coverage/coverage-main.json
-
-      # Checkout PR branch
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
       
       # Ensure coverage directory exists
       - name: Create coverage directory
@@ -80,12 +50,6 @@ jobs:
             exit 1
           fi
 
-      # Download the coverage artifact from the main branch
-      - name: Download coverage artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: coverage-main
-          path: coverage
 
       # Report Coverage
       - name: 'Report Coverage'
@@ -93,4 +57,3 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           json-summary-path: './coverage/coverage-pr.json'
-          json-summary-compare-path: './coverage/coverage-main.json'
