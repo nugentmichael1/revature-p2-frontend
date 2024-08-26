@@ -35,21 +35,17 @@ jobs:
       - name: Create coverage directory
         run: mkdir -p coverage
 
-      # Generate coverage for the PR branch
+     # Generate coverage for the PR branch
       - name: Generate coverage for the PR branch
         run: |
-          npm install
           npm run coverage
-          # Check if coverage files exist
+          # Check if coverage-summary.json exists and move it
           if [ -f ./coverage/coverage-summary.json ]; then
             mv ./coverage/coverage-summary.json coverage/coverage-pr.json
-          elif [ -f ./coverage/coverage-final.json ]; then
-            mv ./coverage/coverage-final.json coverage/coverage-pr.json
           else
             echo "No coverage summary file found for PR!"
             exit 1
           fi
-
 
       # Report Coverage
       - name: 'Report Coverage'
