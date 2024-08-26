@@ -3,7 +3,7 @@ name: Frontend CI
 on:
   pull_request:
     branches:
-      - main # Triggers only for changes in the frontend directory
+      - main 
 
 jobs:
   run-frontend-tests:
