@@ -4,19 +4,17 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './index.css';
 import Layout from '../src/pages/Layout/layout';
 import Home from './components/Home/Home';
+import DashboardPage from "./pages/Dashboard/DashboardPage";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        {/* <Route index element={<SignUp />}></Route> */}
-        <Route path='/' element={<Layout />}>
-          <Route index element={<Home />} />
-          {/* <Route path="/home" element={<Home />}></Route>
-              <Route path="/profile" element={<Profile />}></Route>
-              <Route path="/transactions" element={<Transactions />}></Route> */}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>
   </StrictMode>,
 );
