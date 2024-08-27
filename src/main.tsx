@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import Layout from '../src/pages/Layout/layout';
-import DashboardPage from "./pages/Dashboard/Dashboard";
+import DashboardPage from "./pages/Dashboard/DashboardPage";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
