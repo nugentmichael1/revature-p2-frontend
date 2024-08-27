@@ -65,7 +65,7 @@ export default function Discussion() {
                         {isFormExpanded && (
                             <div className="mt-4">
                                 <textarea
-                                    className="bg-white w-full p-2 border rounded"
+                                    className="bg-white w-full p-2 mb-2 border rounded"
                                     rows={4}
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
@@ -87,7 +87,7 @@ export default function Discussion() {
                             <p>No comments yet.</p>
                         ) : (
                             comments.map((comment, index) => (
-                                <div key={index} className="p-4 mb-4 rounded border border-gray-300">
+                                <div key={index} className="p-4 mb-4 rounded border-t border-gray-300">
                                     <p className="mb-2"><strong>{comment.name}</strong> at {comment.time}</p>
                                     <p>{comment.content}</p>
                                 </div>
