@@ -23,7 +23,7 @@ export default function Register() {
     };
 
     return (
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
             <div className="mb-2 block">
                 <label htmlFor="email">Your email</label>
             </div>
@@ -35,9 +35,11 @@ export default function Register() {
             <input id="password1" type="password" required onChange={handlePassword1Change}/>
             
             <div className="mb-2 block">
-                <label htmlFor="password2">Your email</label>
+                <label htmlFor="password2">Confirm Password</label>
             </div>
             <input id="password2" type="password" required onChange={handlePassword2Change}/>
+
+            <button type="submit">Register</button>
 
         </form>
     )
