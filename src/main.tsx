@@ -8,19 +8,15 @@ import { AppProvider } from "./contexts/AppContext";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <BrowserRouter>
-      <AppProvider>
-          <Routes>
-            {/* <Route index element={<SignUp />}></Route> */}
-            <Route path="/" element={<Layout />}>
-              <Route path="/register" element={<SignInRegister reg={true} />}></Route>
-              <Route path="/login" element={<SignInRegister reg={false} />}></Route>
-              {/* <Route path="/home" element={<Home />}></Route>
-              <Route path="/profile" element={<Profile />}></Route>
-              <Route path="/transactions" element={<Transactions />}></Route> */}
-            </Route>
-          </Routes>
-      </AppProvider>
-      </BrowserRouter>
+    <BrowserRouter>
+    <AppProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="/register" element={<SignInRegister reg={true} />}></Route>
+            <Route path="/login" element={<SignInRegister reg={false} />}></Route>
+          </Route>
+        </Routes>
+    </AppProvider>
+    </BrowserRouter>
   </StrictMode>
 )
