@@ -8,20 +8,21 @@ type CommentType = {
     content: string
 }
 
-type DiscussionInfoType = {
-    name: string;
-    time: string;
-    question: string;
-};
+type DiscussionType = {
+    title: string,
+    time: string,
+    description: string,
+    comments: CommentType[]
+}
+
+type DiscussionProp = {
+    discussion: DiscussionType
+}
 
 
-export default function Discussion() {
+export default function Discussion({discussion}: DiscussionProp) {
     
-    const [discussionInfo, setDiscussionInfo] = useState<DiscussionInfoType>({
-        name: "Discussion Topic",
-        time: "",
-        question: "What are your thoughts on this?"
-    });
+    const [discussionInfo, setDiscussionInfo] = useState<DiscussionType>(discussion);
     const [comments, setComments] = useState<CommentType[]>([]);
     const [newComment, setNewComment] = useState("");
     const [isFormExpanded, setIsFormExpanded] = useState(false);
@@ -49,9 +50,9 @@ export default function Discussion() {
         <>
             <div className="bg-white w-full p-4 text-black">
                 <div className="p-4 rounded border border-gray-300">
-                    <h2 className="text-2xl font-bold">{discussionInfo.name}</h2>
+                    <h2 className="text-2xl font-bold">{discussionInfo.title}</h2>
                     <p className="mt-2">{discussionInfo.time}</p>
-                    <p className="mt-2">{discussionInfo.question}</p>
+                    <p className="mt-2">{discussionInfo.description}</p>
                 </div>
 
                 <div className="px-6">
@@ -74,9 +75,7 @@ export default function Discussion() {
                                 <button
                                     className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
                                     onClick={handleAddComment}
-                                >
-                                    Submit
-                                </button>
+                                >Submit</button>
                             </div>
                         )}
                     </div>
