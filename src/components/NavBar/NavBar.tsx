@@ -10,20 +10,25 @@ import "./navbar.css";
  * Navbar object component for use on the top of all pages
  * @returns the navbar object
  */
+
 function NavBar() {
   return (
     <> 
       <nav className="navbar">
-          <LogoImage />
-
-          <div className="navbar-links">
-            <Navlink path="/"> Home </Navlink>
-            <Navlink path="/advantages"> Advantages </Navlink>
-            <Navlink path="/classes"> Our Classes </Navlink>
-            <Navlink path="/contact"> Contact </Navlink>
-          </div>
-
-          <ProfileMenu />
+        <div className="navbar-logo">
+          <img src={Logo} alt="Logo" className="logo" />
+        </div>
+        
+        <div className="navbar-links">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#contact">Contact</a>
+        </div>
+        
+        <div className="profile-icon">
+          <img src={ProfileIcon} alt="Profile" className="profile" />
+        </div>
       </nav>
     </>
   );
@@ -49,15 +54,6 @@ function LogoImage() {
       </Link>
   )
 }
-
-function ProfileMenu() {
-  return (
-    <> 
-      <ProfileImage />
-    </>
-  )
-}
-
 function ProfileImage() {
   return (
     <img
