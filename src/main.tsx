@@ -1,22 +1,26 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./index.css";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './index.css';
 import Layout from '../src/pages/Layout/layout';
 import SignInRegister from "./pages/SignInRegisterPage/SignInRegisterPage";
 import { AppProvider } from "./contexts/AppContext";
+import Home from './components/Home/Home';
+import DashboardPage from "./pages/Dashboard/DashboardPage";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+  <BrowserRouter>
     <AppProvider>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="/register" element={<SignInRegister reg={true} />}></Route>
-            <Route path="/login" element={<SignInRegister reg={false} />}></Route>
-          </Route>
-        </Routes>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="/register" element={<SignInRegister reg={true} />}></Route>
+        <Route path="/login" element={<SignInRegister reg={false} />}></Route>
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Route>
+    </Routes>
     </AppProvider>
-    </BrowserRouter>
-  </StrictMode>
-)
+  </BrowserRouter>
+  </StrictMode>,
+);
