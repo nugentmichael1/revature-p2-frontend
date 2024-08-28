@@ -16,13 +16,13 @@ createRoot(document.getElementById('root')!).render(
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="/register" element={<SignInRegister reg={true} />}></Route>
-        <Route path="/login" element={<SignInRegister reg={false} />}></Route>
+        <Route path="/register" element={<SignInRegister reg={true} />} />
+        <Route path="/login" element={<SignInRegister reg={false} />} />
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/createcourse" element={<CreateCourse />}>
+        <Route path="/createcourse" element={<CreateCourse />} />
       </Route>
     </Routes>
     </AppProvider>
   </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 );

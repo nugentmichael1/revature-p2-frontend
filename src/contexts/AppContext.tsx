@@ -6,18 +6,18 @@ import {
     useEffect,
   } from "react";
 import { User } from "../types/user";
-import { Account } from "../types/account";
+import { Course } from "../types/course";
   
 interface AppState {
   user: User | null;
-  accounts: Account[] | null;
+  courses: Course[] | null;
   // Add additional state properties here
 }
 
 interface AppContextType {
   state: AppState;
   setUser: (user: User | null) => void;
-  setAccounts: (accounts: Account[] | null) => void;
+  setCourses: (courses: Course[] | null) => void;
   // Add additional state update functions here as needed
 }
 
@@ -35,10 +35,10 @@ export const useAppContext = () => {
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<AppState>(() => {
     const storedUser = localStorage.getItem("user");
-    const storedAccounts = localStorage.getItem("accounts");
+    const storedCourses = localStorage.getItem("courses");
     return {
       user: storedUser ? JSON.parse(storedUser) : null,
-      accounts: storedAccounts ? JSON.parse(storedAccounts) : null,
+      courses: storedCourses ? JSON.parse(storedCourses) : null,
       // Initialize additional state properties here
     };
   });
@@ -50,25 +50,25 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       localStorage.removeItem('user');
     }
 
-    if (state.accounts) {
-      localStorage.setItem('accounts', JSON.stringify(state.accounts));
+    if (state.courses) {
+      localStorage.setItem('courses', JSON.stringify(state.courses));
     } else {
-      localStorage.removeItem('accounts');
+      localStorage.removeItem('courses');
     }
     // Handle additional state changes here
-  }, [state.user, state.accounts]);
+  }, [state.user, state.courses]);
 
   const setUser = (user: User | null) => {
     setState((prevState) => ({ ...prevState, user }));
   };
 
-  const setAccounts = (accounts: Account[] | null) => {
-    setState((prevState) => ({ ...prevState, accounts }));
+  const setCourses = (courses: Course[] | null) => {
+    setState((prevState) => ({ ...prevState, courses }));
   };
   // Add additional state update functions here
 
   return (
-    <AppContext.Provider value={{ state, setUser, setAccounts }}>
+    <AppContext.Provider value={{ state, setUser, setCourses }}>
       {children}
     </AppContext.Provider>
   );
