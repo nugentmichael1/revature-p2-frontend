@@ -1,29 +1,26 @@
 .navbar {
-    width: 100%;
     display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 10px;
-    background-color: white;
-}
-
-.navbar-links {
-    display: flex;
-    gap: 2rem;
     align-items: center;
-    padding: 20px;
+    padding: 10px 20px;
+    background-color: white
 }
 
-#revlearn-logo {
+.navbar a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: orange;
+}
+  
+.logo {
     height: 75px;
     padding-left: 25px;
 }
 
-#profile-icon {
+.profile {
     height: 75px;
     position: fixed;
     right: 0;
+    top: 37px;
     padding-right: 25px;
+    vertical-align: middle;
 }
-
