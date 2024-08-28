@@ -1,0 +1,26 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white
+}
+
+.navbar a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: orange;
+}
+  
+.logo {
+    height: 75px;
+    padding-left: 25px;
+}
+
+.profile {
+    height: 75px;
+    position: fixed;
+    right: 0;
+    top: 37px;
+    padding-right: 25px;
+    vertical-align: middle;
+}
