@@ -1,0 +1,29 @@
+.navbar {
+    width: 100%;
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    background-color: white;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    padding: 20px;
+}
+
+#revlearn-logo {
+    height: 75px;
+    padding-left: 25px;
+}
+
+#profile-icon {
+    height: 75px;
+    position: fixed;
+    right: 0;
+    padding-right: 25px;
+}
+
