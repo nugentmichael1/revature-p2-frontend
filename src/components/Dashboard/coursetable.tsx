@@ -9,17 +9,27 @@ type Course = {
   status: 'Active' | 'Inactive';
 };
 
-const courses: Course[] = [
+type CourseTableProps = {
+  person: Person;
+};
+
+const teacherCourses: Course[] = [
   { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Active' },
   { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Inactive' }
-  
 ];
 
-const CourseTable: React.FC = () => {
+const studentCourses: Course[] = [
+  { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'A', status: 'Active' },
+  { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'B', status: 'Inactive' }
+];
+
+const CourseTable: React.FC<CourseTableProps> = ({ person }) => {
+  const courses = person.role === 'teacher' ? teacherCourses : studentCourses;
+
   return (
     <div className="p-4 bg-white rounded-lg shadow">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">All Courses</h2>
+        <h2 className="text-xl font-bold">{person.role === 'teacher' ? 'Courses Taught' : 'Courses Enrolled'}</h2>
         <div className="flex items-center">
           <input
             type="text"
