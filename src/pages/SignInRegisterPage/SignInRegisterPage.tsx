@@ -10,22 +10,26 @@ export default function SignInRegister({ reg }: SignInRegisterProps) {
     const [register, setRegister] = useState(reg || false);
 
     return (
-        <>
+        <div className="bg-white border border-4 rounded-lg shadow relative m-10 max-w-lg mx-auto">
             {register ?
             <div>
                 <Register />
-                <p>Already have an account? Sign in 
-                    <span className="text-secondary-500 cursor-pointer" onClick={() => setRegister(!register)}> here.</span>
-                </p>
+                <div className="flex justify-center mt-4">
+                    <p className="text-center">Already have an account?
+                        <span className="text-secondary-500 cursor-pointer" onClick={() => setRegister(!register)}> Sign In</span>
+                    </p>
+                </div>
             </div> 
             : 
             <div>
                 <SignIn />
-                <p>Don't have an account? Register 
-                    <span className="text-secondary-500 cursor-pointer" onClick={() => setRegister(!register)}> here.</span>
-                </p>
+                <div className="flex justify-center mt-4">
+                    <p className="text-center">Don't have an account? 
+                        <span className="text-secondary-500 cursor-pointer" onClick={() => setRegister(!register)}> Sign Up</span>
+                    </p>
+                </div>
             </div>
             }
-        </>
+        </div>
     )
 }
