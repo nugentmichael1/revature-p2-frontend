@@ -26,6 +26,7 @@ export default function Discussion({discussion}: DiscussionProp) {
     const [comments, setComments] = useState<CommentType[]>([]);
     const [newComment, setNewComment] = useState("");
     const [isFormExpanded, setIsFormExpanded] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState<number | null>(null);
 
 
     const handleAddComment = () => {
@@ -35,6 +36,19 @@ export default function Discussion({discussion}: DiscussionProp) {
             setIsFormExpanded(false);
         }
     };
+
+
+    const toggleDropdown = (index: number) => {
+        setDropdownOpen(dropdownOpen === index ? null : index);
+    };
+
+
+    const handleDelete = (index: number) => {
+        const newComments = [...comments];
+        newComments.splice(index, 1);
+        setComments(newComments);
+        setDropdownOpen(null);
+    }
 
 
     const getCurrDateTime = (): string => {
@@ -101,7 +115,25 @@ export default function Discussion({discussion}: DiscussionProp) {
                         ) : (
                             comments.map((comment, index) => (
                                 <div key={index} className="p-4 mb-4 rounded border-t border-gray-300">
-                                    <p className="mb-2"><strong>{comment.name}</strong> {timeAgo(comment.time)}</p>
+                                    <div className="flex justify-between items-center">
+                                        <p className="mb-2"><strong>{comment.name}</strong> {timeAgo(comment.time)}</p>
+                                        <div className="relative">
+                                            <button
+                                                onClick={() => toggleDropdown(index)}
+                                                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm text-gray-700 hover:bg-gray-200"
+                                            >...</button>
+                                            {dropdownOpen === index && (
+                                                <div className="origin-top-right absolute right-0 mt-2 rounded-md">
+                                                    <div className="py-1">
+                                                        <button
+                                                            onClick={() => handleDelete(index)}
+                                                            className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
+                                                        >Delete</button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                     <p>{comment.content}</p>
                                 </div>
                             ))

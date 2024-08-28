@@ -22,6 +22,13 @@ export default function DiscussionBoard() {
     const [newDiscussionTitle, setNewDiscussionTitle] = useState("");
     const [newDiscussionDescription, setNewDiscussionDescription] = useState("");
 
+    const [dropdownOpen, setDropdownOpen] = useState<number | null>(null);
+
+
+    const toggleDropdown = (index: number) => {
+        setDropdownOpen(dropdownOpen === index ? null : index);
+    };
+
 
     const handleAddDiscussion = () => {
         if (newDiscussionTitle) {
@@ -36,13 +43,20 @@ export default function DiscussionBoard() {
     const handleSetCurrentDiscussion = (discussion: DiscussionType) => {
         setCurrentDiscussion(discussion);
         setDiscussionIsSelected(true);
-        
-    }
+    };
 
 
     const handleDeselectCurrentDiscussion = () => {
         setDiscussionIsSelected(false);
         setCurrentDiscussion(null);
+    };
+
+
+    const handleDelete = (index: number) => {
+        const newDiscussions = [...discussions];
+        newDiscussions.splice(index, 1);
+        setDiscussions(newDiscussions);
+        setDropdownOpen(null);
     }
 
 
@@ -119,7 +133,25 @@ export default function DiscussionBoard() {
                                 <div key={index} 
                                 className="m-4 p-4 rounded border border-gray-300 hover:bg-gray-200 hover:cursor-pointer"
                                 onClick={() => handleSetCurrentDiscussion(discussion)}>
-                                    <p className="mb-2"><strong>{discussion.title}</strong></p>
+                                    <div className="flex justify-between items-center">
+                                        <p className="mb-2"><strong>{discussion.title}</strong></p>
+                                        <div className="relative">
+                                            <button
+                                                onClick={(e) => {e.stopPropagation(); toggleDropdown(index)}}
+                                                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm text-gray-700 hover:bg-gray-200"
+                                            >...</button>
+                                            {dropdownOpen === index && (
+                                                <div className="origin-top-right absolute right-0 mt-2 rounded-md">
+                                                    <div className="py-1">
+                                                        <button
+                                                            onClick={(e) => {e.stopPropagation(); handleDelete(index)}}
+                                                            className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
+                                                        >Delete</button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                     <p>{discussion.author}</p>
                                     <p>{timeAgo(discussion.time)}</p>
                                     <p>{discussion.description}</p>
