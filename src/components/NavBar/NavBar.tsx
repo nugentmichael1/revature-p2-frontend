@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import axios from "axios";
 import { Link } from "react-router-dom";
 import Logo from '../../assets/RevLEarn-Logo.png'
@@ -12,6 +12,11 @@ import "./navbar.css";
  */
 
 function NavBar() {
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {setIsDropdownOpen(!isDropdownOpen);};
+
   return (
     <> 
       <nav className="navbar">
@@ -20,14 +25,22 @@ function NavBar() {
         </div>
         
         <div className="navbar-links">
-          <a href="#home">Home</a>
-          <a href="#about">About</a>
-          <a href="#services">Services</a>
-          <a href="#contact">Contact</a>
+          <a href="/home">Home</a>
+          <a href="/about">About</a>
+          <a href="/services">Services</a>
+          <a href="/contact">Contact</a>
         </div>
         
-        <div className="profile-icon">
-          <img src={ProfileIcon} alt="Profile" className="profile" />
+        <div className="navbar-profile" onClick={toggleDropdown}>
+          <ProfileImage />
+          {isDropdownOpen && (
+          <div className="dropdown-menu">
+            <ul>
+              <a href="/profile"><li>Profile</li></a>
+              <a href="/billing"><li>Billing</li></a>
+            </ul>
+          </div>
+          )}
         </div>
       </nav>
     </>
@@ -60,7 +73,7 @@ function ProfileImage() {
         src={ProfileIcon}
         alt="Profile icon"
         loading="lazy"
-        id="profile-icon"
+        className="profile-image"
     />
   )
 }
