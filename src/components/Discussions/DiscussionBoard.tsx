@@ -6,6 +6,7 @@ import Discussion from "./Discussion";
 
 type DiscussionType = {
     title: string,
+    author: string,
     time: string,
     description: string,
     comments: []
@@ -24,7 +25,7 @@ export default function DiscussionBoard() {
 
     const handleAddDiscussion = () => {
         if (newDiscussionTitle) {
-            setDiscussions([...discussions, {title: newDiscussionTitle, time: getCurrDateTime(), description: newDiscussionDescription, comments: []}]);
+            setDiscussions([...discussions, {title: newDiscussionTitle, author: "posted by", time: getCurrDateTime(), description: newDiscussionDescription, comments: []}]);
             setNewDiscussionTitle("");
             setNewDiscussionDescription("");
             setIsFormExpanded(false);
@@ -47,11 +48,25 @@ export default function DiscussionBoard() {
 
     const getCurrDateTime = (): string => {
         let date: Date = new Date();
-        return date.toLocaleDateString() + ", " + date.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-	};
+        return date.toUTCString();
+    };
+
+    const timeAgo = (postDateTime: string): string => {
+        let currDateTime = new Date(getCurrDateTime());
+        let postDate = new Date(postDateTime);
+        let diffInSeconds = Math.floor((currDateTime.getTime() - postDate.getTime()) / 1000);
+    
+        let interval = Math.floor(diffInSeconds / 86400);
+        if (interval >= 1) return interval + " day" + (interval > 1 ? "s" : "") + " ago";
+    
+        interval = Math.floor(diffInSeconds / 3600);
+        if (interval >= 1) return interval + " hour" + (interval > 1 ? "s" : "") + " ago";
+    
+        interval = Math.floor(diffInSeconds / 60);
+        if (interval >= 1) return interval + " minute" + (interval > 1 ? "s" : "") + " ago";
+    
+        return diffInSeconds + " second" + (diffInSeconds > 1 ? "s" : "") + " ago";
+    };
 
 
     return (<>
@@ -105,7 +120,8 @@ export default function DiscussionBoard() {
                                 className="m-4 p-4 rounded border border-gray-300 hover:bg-gray-200 hover:cursor-pointer"
                                 onClick={() => handleSetCurrentDiscussion(discussion)}>
                                     <p className="mb-2"><strong>{discussion.title}</strong></p>
-                                    <p>{discussion.time}</p>
+                                    <p>{discussion.author}</p>
+                                    <p>{timeAgo(discussion.time)}</p>
                                     <p>{discussion.description}</p>
                                     <p>{discussion.comments.length} comments</p>
                                 </div>

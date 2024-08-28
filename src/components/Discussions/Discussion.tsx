@@ -39,11 +39,25 @@ export default function Discussion({discussion}: DiscussionProp) {
 
     const getCurrDateTime = (): string => {
         let date: Date = new Date();
-        return date.toLocaleDateString() + ", " + date.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-	};
+        return date.toUTCString();
+    };
+
+    const timeAgo = (postDateTime: string): string => {
+        let currDateTime = new Date(getCurrDateTime());
+        let postDate = new Date(postDateTime);
+        let diffInSeconds = Math.floor((currDateTime.getTime() - postDate.getTime()) / 1000);
+    
+        let interval = Math.floor(diffInSeconds / 86400);
+        if (interval >= 1) return interval + " day" + (interval > 1 ? "s" : "") + " ago";
+    
+        interval = Math.floor(diffInSeconds / 3600);
+        if (interval >= 1) return interval + " hour" + (interval > 1 ? "s" : "") + " ago";
+    
+        interval = Math.floor(diffInSeconds / 60);
+        if (interval >= 1) return interval + " minute" + (interval > 1 ? "s" : "") + " ago";
+    
+        return diffInSeconds + " second" + (diffInSeconds > 1 ? "s" : "") + " ago";
+    };
 
 
     return (
@@ -51,7 +65,7 @@ export default function Discussion({discussion}: DiscussionProp) {
             <div className="bg-white w-full p-4 text-black">
                 <div className="p-4 rounded border border-gray-300">
                     <h2 className="text-2xl font-bold">{discussionInfo.title}</h2>
-                    <p className="mt-2">{discussionInfo.time}</p>
+                    <p className="mt-2">{timeAgo(discussionInfo.time)}</p>
                     <p className="mt-2">{discussionInfo.description}</p>
                 </div>
 
@@ -87,7 +101,7 @@ export default function Discussion({discussion}: DiscussionProp) {
                         ) : (
                             comments.map((comment, index) => (
                                 <div key={index} className="p-4 mb-4 rounded border-t border-gray-300">
-                                    <p className="mb-2"><strong>{comment.name}</strong> at {comment.time}</p>
+                                    <p className="mb-2"><strong>{comment.name}</strong> {timeAgo(comment.time)}</p>
                                     <p>{comment.content}</p>
                                 </div>
                             ))
