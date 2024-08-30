@@ -15,7 +15,7 @@ export default function SignInRegister({ reg }: SignInRegisterProps) {
             <div>
                 <Register />
                 <div className="flex justify-center mt-4">
-                    <p className="text-center">Already have an account?
+                    <p className="text-center mb-2">Already have an account?
                         <span className="text-secondary-500 cursor-pointer" onClick={() => setRegister(!register)}> Sign In</span>
                     </p>
                 </div>
@@ -24,7 +24,7 @@ export default function SignInRegister({ reg }: SignInRegisterProps) {
             <div>
                 <SignIn />
                 <div className="flex justify-center mt-4">
-                    <p className="text-center">Don't have an account? 
+                    <p className="text-center mb-2">Don't have an account? 
                         <span className="text-secondary-500 cursor-pointer" onClick={() => setRegister(!register)}> Sign Up</span>
                     </p>
                 </div>

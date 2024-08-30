@@ -2,6 +2,6 @@ export interface User {
     id: number;
     username: string;
     email: string;
-    passwordHash: string;
-    role: string;
+    password: string;
+    role: "STUDENT" | "EDUCATOR" | "INSTITUTION";
   }
