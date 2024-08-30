@@ -28,6 +28,9 @@ export default function Discussion({discussion}: DiscussionProp) {
     const [isFormExpanded, setIsFormExpanded] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState<number | null>(null);
 
+    const [commentBeingEdited, setCommentBeingEdited] = useState<number | null>(null);
+    const [editedCommentContent, setEditedCommentContent] = useState("");
+
 
     const handleAddComment = () => {
         if (newComment) {
@@ -38,16 +41,44 @@ export default function Discussion({discussion}: DiscussionProp) {
     };
 
 
-    const toggleDropdown = (index: number) => {
-        setDropdownOpen(dropdownOpen === index ? null : index);
+    const toggleDropdown = (i: number) => {
+        setDropdownOpen(dropdownOpen === i ? null : i);
     };
 
 
-    const handleDelete = (index: number) => {
+    const handleDelete = (i: number) => {
         const newComments = [...comments];
-        newComments.splice(index, 1);
+        newComments.splice(i, 1);
         setComments(newComments);
         setDropdownOpen(null);
+        handleCancelCommentUpdate();
+    }
+
+
+    const handleEdit = (i: number) => {
+        setCommentBeingEdited(i);
+        setEditedCommentContent(comments[i].content)
+    }
+
+
+    const handleUpdateComment = () => {
+        if (commentBeingEdited !== null) {
+            const curr = comments[commentBeingEdited];
+
+            if (curr !== null && curr.content !== editedCommentContent) {
+                const newComments = [...comments];
+                newComments[commentBeingEdited] = {name: curr.name, time: getCurrDateTime(), content: editedCommentContent}
+                setComments(newComments);
+                setEditedCommentContent("");
+                setCommentBeingEdited(null);
+            };
+        }
+    }
+
+
+    const handleCancelCommentUpdate = () => {
+        setEditedCommentContent("");
+        setCommentBeingEdited(null);
     }
 
 
@@ -113,20 +144,24 @@ export default function Discussion({discussion}: DiscussionProp) {
                         {comments.length === 0 ? (
                             <p>No comments yet.</p>
                         ) : (
-                            comments.map((comment, index) => (
-                                <div key={index} className="p-4 mb-4 rounded border-t border-gray-300">
+                            comments.map((comment, i) => (
+                                <div key={i} className="p-4 mb-4 rounded border-t border-gray-300">
                                     <div className="flex justify-between items-center">
                                         <p className="mb-2"><strong>{comment.name}</strong> {timeAgo(comment.time)}</p>
                                         <div className="relative">
                                             <button
-                                                onClick={() => toggleDropdown(index)}
+                                                onClick={() => toggleDropdown(i)}
                                                 className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm text-gray-700 hover:bg-gray-200"
                                             >...</button>
-                                            {dropdownOpen === index && (
+                                            {dropdownOpen === i && (
                                                 <div className="origin-top-right absolute right-0 mt-2 rounded-md">
-                                                    <div className="py-1">
+                                                    <div className="py-1 flex space-x-2">
                                                         <button
-                                                            onClick={() => handleDelete(index)}
+                                                            onClick={() => {handleEdit(i); toggleDropdown(i)}}
+                                                            className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
+                                                        >Edit</button>
+                                                        <button
+                                                            onClick={() => {handleDelete(i); toggleDropdown(i)}}
                                                             className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
                                                         >Delete</button>
                                                     </div>
@@ -134,7 +169,27 @@ export default function Discussion({discussion}: DiscussionProp) {
                                             )}
                                         </div>
                                     </div>
-                                    <p>{comment.content}</p>
+                                    {
+                                        (commentBeingEdited === null || commentBeingEdited !== i) ? (
+                                            <p>{comment.content}</p>
+                                        ) : (
+                                            <div>
+                                                <textarea
+                                                    className="bg-white w-full p-2 mb-2 border rounded"
+                                                    value={editedCommentContent}
+                                                    onChange={(e) => setEditedCommentContent(e.target.value)}
+                                                >{comment.content}</textarea>
+                                                <button
+                                                    className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
+                                                    onClick={() => handleCancelCommentUpdate()}
+                                                >Cancel</button>
+                                                <button
+                                                    className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow ml-2"
+                                                    onClick={() => handleUpdateComment()}
+                                                >Submit</button>
+                                            </div>
+                                        )
+                                    }
                                 </div>
                             ))
                         )}
