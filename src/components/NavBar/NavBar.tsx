@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Logo from '../../assets/RevLEarn-Logo.png'
 import ProfileIcon from '../../assets/profile-icon.png'
 import '../../index.css'
-import "./navbar.css";
+import "./NavBar.css";
 
 /**
  * Navbar object component for use on the top of all pages
