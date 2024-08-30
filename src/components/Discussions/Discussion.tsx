@@ -22,7 +22,7 @@ type DiscussionProp = {
 
 export default function Discussion({discussion}: DiscussionProp) {
     
-    const [discussionInfo, setDiscussionInfo] = useState<DiscussionType>(discussion);
+    const [discussionInfo] = useState<DiscussionType>(discussion);
     const [comments, setComments] = useState<CommentType[]>([]);
     const [newComment, setNewComment] = useState("");
     const [isFormExpanded, setIsFormExpanded] = useState(false);

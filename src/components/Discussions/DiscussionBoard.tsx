@@ -24,6 +24,10 @@ export default function DiscussionBoard() {
 
     const [dropdownOpen, setDropdownOpen] = useState<number | null>(null);
 
+    const [discussionBeingEdited, setDiscussionBeingEdited] = useState<number | null>(null);
+    const [editedDiscussionTitle, setEditedDiscussionTitle] = useState("");
+    const [editedDiscussionDescription, setEditedDiscussionDescription] = useState("");
+
 
     const toggleDropdown = (index: number) => {
         setDropdownOpen(dropdownOpen === index ? null : index);
@@ -41,8 +45,10 @@ export default function DiscussionBoard() {
 
 
     const handleSetCurrentDiscussion = (discussion: DiscussionType) => {
-        setCurrentDiscussion(discussion);
-        setDiscussionIsSelected(true);
+        if (discussionBeingEdited === null) {
+            setCurrentDiscussion(discussion);
+            setDiscussionIsSelected(true);
+        }
     };
 
 
@@ -52,11 +58,48 @@ export default function DiscussionBoard() {
     };
 
 
-    const handleDelete = (index: number) => {
+    const handleDelete = (i: number) => {
         const newDiscussions = [...discussions];
-        newDiscussions.splice(index, 1);
+        newDiscussions.splice(i, 1);
         setDiscussions(newDiscussions);
         setDropdownOpen(null);
+        handleCancelUpdateDiscussion();
+    }
+
+
+    const handleEdit = (i: number) => {
+        setDiscussionBeingEdited(i);
+        setEditedDiscussionTitle(discussions[i].title);
+        setEditedDiscussionDescription(discussions[i].description);
+    }
+
+
+    const handleUpdateDiscussion = () => {
+        if (discussionBeingEdited !== null) {
+            const curr = discussions[discussionBeingEdited];
+            
+            if (curr !== null && (curr.title !== editedDiscussionTitle || curr.description !== editedDiscussionDescription)) {
+                const newDiscussions = [...discussions];
+                newDiscussions[discussionBeingEdited] = {
+                    title: editedDiscussionTitle,
+                    author: "posted by",
+                    time: getCurrDateTime(),
+                    description: editedDiscussionDescription,
+                    comments: curr.comments
+                };
+                setDiscussions(newDiscussions);
+                setEditedDiscussionTitle("");
+                setEditedDiscussionDescription("");
+                setDiscussionBeingEdited(null);
+            }
+        }
+    };
+
+
+    const handleCancelUpdateDiscussion = () => {
+        setEditedDiscussionTitle("");
+        setEditedDiscussionDescription("");
+        setDiscussionBeingEdited(null);
     }
 
 
@@ -144,7 +187,11 @@ export default function DiscussionBoard() {
                                                 <div className="origin-top-right absolute right-0 mt-2 rounded-md">
                                                     <div className="py-1">
                                                         <button
-                                                            onClick={(e) => {e.stopPropagation(); handleDelete(index)}}
+                                                            onClick={(e) => {e.stopPropagation(); handleEdit(index); toggleDropdown(index)}}
+                                                            className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
+                                                        >Edit</button>
+                                                        <button
+                                                            onClick={(e) => {e.stopPropagation(); handleDelete(index); toggleDropdown(index)}}
                                                             className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
                                                         >Delete</button>
                                                     </div>
@@ -152,10 +199,38 @@ export default function DiscussionBoard() {
                                             )}
                                         </div>
                                     </div>
-                                    <p>{discussion.author}</p>
-                                    <p>{timeAgo(discussion.time)}</p>
-                                    <p>{discussion.description}</p>
-                                    <p>{discussion.comments.length} comments</p>
+                                    {
+                                        (discussionBeingEdited === null || discussionBeingEdited !== index) ? (
+                                            <div>
+                                                <p>{discussion.author}</p>
+                                                <p>{timeAgo(discussion.time)}</p>
+                                                <p>{discussion.description}</p>
+                                                <p>{discussion.comments.length} comments</p>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <label>Title: </label><textarea
+                                                    className="bg-white w-full p-2 mb-2 border rounded"
+                                                    rows={1}
+                                                    value={editedDiscussionTitle}
+                                                    onChange={(e) => {e.stopPropagation(); setEditedDiscussionTitle(e.target.value)}}
+                                                >{discussion.title}</textarea>
+                                                <label>Description: </label><textarea
+                                                    className="bg-white w-full p-2 mb-2 border rounded"
+                                                    value={editedDiscussionDescription}
+                                                    onChange={(e) => {e.stopPropagation(); setEditedDiscussionDescription(e.target.value)}}
+                                                >{discussion.description}</textarea>
+                                                <button
+                                                    className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
+                                                    onClick={(e) => {e.stopPropagation(); handleCancelUpdateDiscussion()}}
+                                                >Cancel</button>
+                                                <button
+                                                    className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow ml-2"
+                                                    onClick={(e) => {e.stopPropagation(); handleUpdateDiscussion()}}
+                                                >Submit</button>
+                                            </div>
+                                        )
+                                    }
                                 </div>
                             ))
                         )}
@@ -172,7 +247,6 @@ export default function DiscussionBoard() {
                     <Discussion discussion={currentDiscussion} />
                 </div>
             )}
-
 
         </div>
         
