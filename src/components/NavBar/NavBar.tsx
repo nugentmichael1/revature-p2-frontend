@@ -1,29 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import axios from "axios";
 import { Link } from "react-router-dom";
 import Logo from '../../assets/RevLEarn-Logo.png'
 import ProfileIcon from '../../assets/profile-icon.png'
 import '../../index.css'
-import "./navbar.css";
+import "./NavBar.css";
 
 /**
  * Navbar object component for use on the top of all pages
  * @returns the navbar object
  */
+
 function NavBar() {
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {setIsDropdownOpen(!isDropdownOpen);};
+
   return (
     <> 
       <nav className="navbar">
-          <LogoImage />
-
-          <div className="navbar-links">
-            <Navlink path="/"> Home </Navlink>
-            <Navlink path="/advantages"> Advantages </Navlink>
-            <Navlink path="/classes"> Our Classes </Navlink>
-            <Navlink path="/contact"> Contact </Navlink>
+        <div className="navbar-logo">
+          <img src={Logo} alt="Logo" className="logo" />
+        </div>
+        
+        <div className="navbar-links">
+          <a href="/home">Home</a>
+          <a href="/about">About</a>
+          <a href="/services">Services</a>
+          <a href="/contact">Contact</a>
+        </div>
+        
+        <div className="navbar-profile" onClick={toggleDropdown}>
+          <ProfileImage />
+          {isDropdownOpen && (
+          <div className="dropdown-menu">
+            <ul>
+              <a href="/profile"><li>Profile</li></a>
+              <a href="/billing"><li>Billing</li></a>
+            </ul>
           </div>
-
-          <ProfileMenu />
+          )}
+        </div>
       </nav>
     </>
   );
@@ -49,22 +67,13 @@ function LogoImage() {
       </Link>
   )
 }
-
-function ProfileMenu() {
-  return (
-    <> 
-      <ProfileImage />
-    </>
-  )
-}
-
 function ProfileImage() {
   return (
     <img
         src={ProfileIcon}
         alt="Profile icon"
         loading="lazy"
-        id="profile-icon"
+        className="profile-image"
     />
   )
 }

@@ -1,0 +1,55 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches:
+      - main 
+
+jobs:
+  run-frontend-tests:
+    name: Run Frontend Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      # Checkout PR branch
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
+      
+      # Ensure coverage directory exists
+      - name: Create coverage directory
+        run: mkdir -p coverage
+
+     # Generate coverage for the PR branch
+      - name: Generate coverage for the PR branch
+        run: |
+          npm run coverage
+          # Check if coverage-summary.json exists and move it
+          if [ -f ./coverage/coverage-summary.json ]; then
+            mv ./coverage/coverage-summary.json coverage/coverage-pr.json
+          else
+            echo "No coverage summary file found for PR!"
+            exit 1
+          fi
+
+      # Report Coverage
+      - name: 'Report Coverage'
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          json-summary-path: './coverage/coverage-pr.json'
