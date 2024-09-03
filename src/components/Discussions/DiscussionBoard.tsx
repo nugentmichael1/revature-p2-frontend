@@ -45,7 +45,11 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
     const getDiscussions = async () => {
         try {
 			const response = await axios.get(`${url}/discussion/${courseId}`);
-			setDiscussions(response.data);
+            if (response.headers['content-type'].includes('application/json')) {
+                setDiscussions(response.data);
+            } else {
+                throw Error("Unexpected response type");
+            }
 		} catch (error) {
 			console.error("Error getting discussions: ", error);
             setErrorMessage("Error getting discussions")
@@ -68,14 +72,14 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
                 description: newDiscussionDescription, 
                 comments: []};
 
-            setDiscussions([...discussions, newDiscussion]);
-            setNewDiscussionTitle("");
-            setNewDiscussionDescription("");
-            setIsFormExpanded(false);
-
             try {
                 const response = await axios.post(`${url}/discussion/${courseId}`, newDiscussion);
-                //setDiscussions(response.data);
+
+                setDiscussions([...discussions, newDiscussion]);
+                setNewDiscussionTitle("");
+                setNewDiscussionDescription("");
+                setIsFormExpanded(false);
+
             } catch (error) {
                 console.error("Error adding discussion: ", error);
                 setErrorMessage("Error adding discussion")
@@ -99,15 +103,16 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
 
 
     const handleDelete = async (i: number) => {
-        const newDiscussions = [...discussions];
-        newDiscussions.splice(i, 1);
-        setDiscussions(newDiscussions);
-        setDropdownOpen(null);
-        handleCancelUpdateDiscussion();
 
         try {
 			const response = await axios.delete(`${url}/discussion/${i}`);
-			//setDiscussions(response.data);
+			
+            const newDiscussions = [...discussions];
+            newDiscussions.splice(i, 1);
+            setDiscussions(newDiscussions);
+            setDropdownOpen(null);
+            handleCancelUpdateDiscussion();
+
 		} catch (error) {
 			console.error("Error deleting discussion: ", error);
             setErrorMessage("Error deleting discussion")
@@ -115,22 +120,14 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
     }
 
 
-    const handleEdit = async (i: number) => {
+    const handleEdit = (i: number) => {
         setDiscussionBeingEdited(i);
         setEditedDiscussionTitle(discussions[i].title);
         setEditedDiscussionDescription(discussions[i].description);
-        
-        try {
-			const response = await axios.put(`${url}/discussion/${i}`, (discussions[i].title, discussions[i].description));
-			//setDiscussions(response.data);
-		} catch (error) {
-			console.error("Error updating discussion: ", error);
-            setErrorMessage("Error updating discussion")
-		}
     }
 
 
-    const handleUpdateDiscussion = () => {
+    const handleUpdateDiscussion = async () => {
         if (discussionBeingEdited !== null) {
             const curr = discussions[discussionBeingEdited];
             
@@ -143,10 +140,19 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
                     description: editedDiscussionDescription,
                     comments: curr.comments
                 };
-                setDiscussions(newDiscussions);
-                setEditedDiscussionTitle("");
-                setEditedDiscussionDescription("");
-                setDiscussionBeingEdited(null);
+
+                try {
+                    const response = await axios.put(`${url}/discussion/${discussionBeingEdited}`, {editedDiscussionTitle, editedDiscussionDescription});
+
+                    setDiscussions(newDiscussions);
+                    setEditedDiscussionTitle("");
+                    setEditedDiscussionDescription("");
+                    setDiscussionBeingEdited(null);
+
+                } catch (error) {
+                    console.error("Error updating discussion: ", error);
+                    setErrorMessage("Error updating discussion")
+                }
             }
         }
     };
@@ -160,14 +166,6 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
 
 
     useEffect(() => {
-
-        // state.user = {
-        //     id: 1,
-        //     username: "temp",
-        //     email: "",
-        //     password: "",
-        //     role: "EDUCATOR",
-        // }
 
         getDiscussions();
 

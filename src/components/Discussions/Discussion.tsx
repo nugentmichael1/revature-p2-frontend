@@ -43,7 +43,11 @@ export default function Discussion({discussion}: DiscussionProps) {
     const getComments = async () => {
         try {
 			const response = await axios.get(`${url}/comment/${discussion.id}`);
-			setComments(response.data);
+            if (response.headers['content-type'].includes('application/json')) {
+                setComments(response.data);
+            } else {
+                throw Error("Unexpected response type");
+            }
 		} catch (error) {
 			console.error("Error getting comments: ", error);
             setErrorMessage("Error getting comments")
@@ -59,16 +63,16 @@ export default function Discussion({discussion}: DiscussionProps) {
                 time: getCurrDateTime(), 
                 content: newComment};
 
-            setComments([...comments, commentToAdd]);
-            setNewComment("");
-            setIsFormExpanded(false);
-
             try {
                 const response = await axios.post(`${url}/comment/${discussion.id}`, commentToAdd);
-                //setComments(response.data);
+                
+                setComments([...comments, commentToAdd]);
+                setNewComment("");
+                setIsFormExpanded(false);
+
             } catch (error) {
-                console.error("Error updating comment: ", error);
-                setErrorMessage("Error updating comment")
+                console.error("Error adding comment: ", error);
+                setErrorMessage("Error adding comment")
             }
         }
     };
@@ -80,15 +84,16 @@ export default function Discussion({discussion}: DiscussionProps) {
 
 
     const handleDelete = async (i: number) => {
-        const newComments = [...comments];
-        newComments.splice(i, 1);
-        setComments(newComments);
-        setDropdownOpen(null);
-        handleCancelCommentUpdate();
-        
+
         try {
             const response = await axios.delete(`${url}/comment/${i}`);
-            //setComments(response.data);
+            
+            const newComments = [...comments];
+            newComments.splice(i, 1);
+            setComments(newComments);
+            setDropdownOpen(null);
+            handleCancelCommentUpdate();
+
         } catch (error) {
             console.error("Error deleting comment: ", error);
             setErrorMessage("Error deleting comment")
@@ -96,30 +101,31 @@ export default function Discussion({discussion}: DiscussionProps) {
     }
 
 
-    const handleEdit = async (i: number) => {
+    const handleEdit = (i: number) => {
         setCommentBeingEdited(i);
         setEditedCommentContent(comments[i].content)
-
-        try {
-            const response = await axios.put(`${url}/comment/${i}`, comments[i].content);
-            //setComments(response.data);
-        } catch (error) {
-            console.error("Error deleting comment: ", error);
-            setErrorMessage("Error deleting comment")
-        }
     }
 
 
-    const handleUpdateComment = () => {
+    const handleUpdateComment = async () => {
         if (commentBeingEdited !== null) {
             const curr = comments[commentBeingEdited];
 
             if (curr !== null && curr.content !== editedCommentContent) {
-                const newComments = [...comments];
-                newComments[commentBeingEdited] = {name: curr.name, time: getCurrDateTime(), content: editedCommentContent}
-                setComments(newComments);
-                setEditedCommentContent("");
-                setCommentBeingEdited(null);
+
+                try {
+                    const response = await axios.put(`${url}/comment/${commentBeingEdited}`, {editedCommentContent});
+                    
+                    const newComments = [...comments];
+                    newComments[commentBeingEdited] = {name: curr.name, time: getCurrDateTime(), content: editedCommentContent}
+                    setComments(newComments);
+                    setEditedCommentContent("");
+                    setCommentBeingEdited(null);
+
+                } catch (error) {
+                    console.error("Error updating comment: ", error);
+                    setErrorMessage("Error updating comment")
+                }
             };
         }
     }
