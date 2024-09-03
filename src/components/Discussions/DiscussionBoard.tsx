@@ -1,10 +1,13 @@
 
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Discussion from "./Discussion";
+import { useAppContext } from "../../contexts/AppContext";
+import axios from 'axios';
 
 
 type DiscussionType = {
+    id?: number,
     title: string,
     author: string,
     time: string,
@@ -12,11 +15,20 @@ type DiscussionType = {
     comments: []
 }
 
+type DiscussionBoardProps = {
+    courseId: number
+}
 
-export default function DiscussionBoard() {
+
+export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
+    const url = import.meta.env.VITE_APP_API_URL;
+    const { state } = useAppContext();
+    const [errorMessage, setErrorMessage] = useState("");
+    
     const [discussions, setDiscussions] = useState<DiscussionType[]>([]);
     const [discussionIsSelected, setDiscussionIsSelected] = useState(false);
     const [currentDiscussion, setCurrentDiscussion] = useState<DiscussionType | null>(null);
+    const [addDiscussionErrorMessage, setAddDiscussionErrorMessage] = useState("");
 
     const [isFormExpanded, setIsFormExpanded] = useState(false);
     const [newDiscussionTitle, setNewDiscussionTitle] = useState("");
@@ -29,17 +41,49 @@ export default function DiscussionBoard() {
     const [editedDiscussionDescription, setEditedDiscussionDescription] = useState("");
 
 
+
+    const getDiscussions = async () => {
+        try {
+			const response = await axios.get(`${url}/discussion/${courseId}`);
+            if (response.headers['content-type'].includes('application/json')) {
+                setDiscussions(response.data);
+            } else {
+                throw Error("Unexpected response type");
+            }
+		} catch (error) {
+			console.error("Error getting discussions: ", error);
+            setErrorMessage("Error getting discussions")
+		}
+    }
+
+
     const toggleDropdown = (i: number) => {
         setDropdownOpen(dropdownOpen === i ? null : i);
     };
 
 
-    const handleAddDiscussion = () => {
-        if (newDiscussionTitle) {
-            setDiscussions([...discussions, {title: newDiscussionTitle, author: "posted by", time: getCurrDateTime(), description: newDiscussionDescription, comments: []}]);
-            setNewDiscussionTitle("");
-            setNewDiscussionDescription("");
-            setIsFormExpanded(false);
+    const handleAddDiscussion = async () => {
+        if (newDiscussionTitle && state.user != null) {
+
+            const newDiscussion: DiscussionType = {
+                title: newDiscussionTitle, 
+                author: state.user.username !== null ? state.user.username : "null", 
+                time: getCurrDateTime(), 
+                description: newDiscussionDescription, 
+                comments: []};
+
+            try {
+                const response = await axios.post(`${url}/discussion/${courseId}`, newDiscussion);
+
+                setDiscussions([...discussions, newDiscussion]);
+                setNewDiscussionTitle("");
+                setNewDiscussionDescription("");
+                setIsFormExpanded(false);
+
+            } catch (error) {
+                console.error("Error adding discussion: ", error);
+                setErrorMessage("Error adding discussion")
+            }
         }
     };
 
@@ -58,12 +102,21 @@ export default function DiscussionBoard() {
     };
 
 
-    const handleDelete = (i: number) => {
-        const newDiscussions = [...discussions];
-        newDiscussions.splice(i, 1);
-        setDiscussions(newDiscussions);
-        setDropdownOpen(null);
-        handleCancelUpdateDiscussion();
+    const handleDelete = async (i: number) => {
+
+        try {
+			const response = await axios.delete(`${url}/discussion/${i}`);
+			
+            const newDiscussions = [...discussions];
+            newDiscussions.splice(i, 1);
+            setDiscussions(newDiscussions);
+            setDropdownOpen(null);
+            handleCancelUpdateDiscussion();
+
+		} catch (error) {
+			console.error("Error deleting discussion: ", error);
+            setErrorMessage("Error deleting discussion")
+		}
     }
 
 
@@ -74,7 +127,7 @@ export default function DiscussionBoard() {
     }
 
 
-    const handleUpdateDiscussion = () => {
+    const handleUpdateDiscussion = async () => {
         if (discussionBeingEdited !== null) {
             const curr = discussions[discussionBeingEdited];
             
@@ -87,10 +140,19 @@ export default function DiscussionBoard() {
                     description: editedDiscussionDescription,
                     comments: curr.comments
                 };
-                setDiscussions(newDiscussions);
-                setEditedDiscussionTitle("");
-                setEditedDiscussionDescription("");
-                setDiscussionBeingEdited(null);
+
+                try {
+                    const response = await axios.put(`${url}/discussion/${discussionBeingEdited}`, {editedDiscussionTitle, editedDiscussionDescription});
+
+                    setDiscussions(newDiscussions);
+                    setEditedDiscussionTitle("");
+                    setEditedDiscussionDescription("");
+                    setDiscussionBeingEdited(null);
+
+                } catch (error) {
+                    console.error("Error updating discussion: ", error);
+                    setErrorMessage("Error updating discussion")
+                }
             }
         }
     };
@@ -101,6 +163,16 @@ export default function DiscussionBoard() {
         setEditedDiscussionDescription("");
         setDiscussionBeingEdited(null);
     }
+
+
+    useEffect(() => {
+
+        getDiscussions();
+
+        if (state.user === null) {
+            setAddDiscussionErrorMessage("Must be logged in to add a discussion.");
+        }
+    }, []);
 
 
     const getCurrDateTime = (): string => {
@@ -134,6 +206,8 @@ export default function DiscussionBoard() {
                 <h2 className="text-2xl font-bold">Discussions</h2>
             </div>
 
+            <p className="text-red-700">{errorMessage}</p>
+
             {!discussionIsSelected && (
                 <div>
                     <div className="py-4 mb-4">
@@ -145,6 +219,7 @@ export default function DiscussionBoard() {
                         </button>
                         {isFormExpanded && (
                             <div className="mt-4">
+                                <p className="text-red-700">{addDiscussionErrorMessage}</p>
                                 <textarea
                                     className="bg-white w-full p-2 mb-2 border rounded"
                                     rows={1}
@@ -167,7 +242,6 @@ export default function DiscussionBoard() {
                         )}
                     </div>
 
-
                     <div>
                         {discussions.length === 0 ? (
                             <p>No discussions yet.</p>
@@ -178,26 +252,28 @@ export default function DiscussionBoard() {
                                 onClick={() => handleSetCurrentDiscussion(discussion)}>
                                     <div className="flex justify-between items-center">
                                         <p className="mb-2"><strong>{discussion.title}</strong></p>
-                                        <div className="relative">
-                                            <button
-                                                onClick={(e) => {e.stopPropagation(); toggleDropdown(i)}}
-                                                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm text-gray-700 hover:bg-gray-200"
-                                            >...</button>
-                                            {dropdownOpen === i && (
-                                                <div className="origin-top-right absolute right-0 mt-2 rounded-md">
-                                                    <div className="py-1">
-                                                        <button
-                                                            onClick={(e) => {e.stopPropagation(); handleEdit(i); toggleDropdown(i)}}
-                                                            className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
-                                                        >Edit</button>
-                                                        <button
-                                                            onClick={(e) => {e.stopPropagation(); handleDelete(i); toggleDropdown(i)}}
-                                                            className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
-                                                        >Delete</button>
+                                        {state.user !== null && (state.user.role === "EDUCATOR" || state.user.role === "INSTITUTION"|| state.user.username === discussion.author) && (
+                                            <div className="relative">
+                                                <button
+                                                    onClick={(e) => {e.stopPropagation(); toggleDropdown(i)}}
+                                                    className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm text-gray-700 hover:bg-gray-200"
+                                                >...</button>
+                                                {dropdownOpen === i && (
+                                                    <div className="origin-top-right absolute right-0 mt-2 rounded-md">
+                                                        <div className="py-1">
+                                                            <button
+                                                                onClick={(e) => {e.stopPropagation(); handleEdit(i); toggleDropdown(i)}}
+                                                                className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
+                                                            >Edit</button>
+                                                            <button
+                                                                onClick={(e) => {e.stopPropagation(); handleDelete(i); toggleDropdown(i)}}
+                                                                className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
+                                                            >Delete</button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
-                                        </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                     {
                                         (discussionBeingEdited === null || discussionBeingEdited !== i) ? (
