@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
 import { Link } from "react-router-dom";
-import { User } from "../../types/user"
-
+import { useAppContext } from '../../contexts/AppContext';
+import { useEffect, useState } from 'react';
 // import axios from "axios";
 import Logo from '../../assets/RevLEarn-Logo.png'
 import ProfileIcon from '../../assets/profile-icon.png'
@@ -18,7 +17,10 @@ function NavBar() {
 
   const toggleDropdown = () => {setIsDropdownOpen(!isDropdownOpen);};
 
-  const [user, setUser] = useState(1);
+  const {
+    state: { user },
+    setUser,
+  } = useAppContext();
 
   return (
     <> 
@@ -28,7 +30,7 @@ function NavBar() {
         <NavBarLinks />
         
         <div className="navbar-profile" onClick={toggleDropdown}>
-          {user ? (
+          {user && user.username ? (
             <div className="profile-icon">
               <ProfileImage />
               {isDropdownOpen && (
@@ -48,11 +50,19 @@ function NavBar() {
 }
 
 function DropdownMenu() {
+  const {
+    state: { user },
+    setUser,
+  } = useAppContext();
+
+  const logoutUser = () => {setUser(null);};
+
   return (
     <div className="dropdown-menu">
     <ul>
       <a href="/profile"><li>Profile</li></a>
       <a href="/billing"><li>Billing</li></a>
+      <a href="/" onClick={logoutUser}><li>Log Out</li></a>
     </ul>
   </div>
   )
