@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function SignIn() {
   const [username, setUsername] = useState('');
@@ -13,14 +14,22 @@ export default function SignIn() {
 
   const nav = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: axios request
+    const data = {
+      username: username,
+      password: password,
+    }
+    const res = await axios.post("http://localhost:8080/api/v1/user/login", data);
+    console.log(res.data);
+    // TODO: set res values
     setUser({
       id: 0,
       username: username,
       email: email,
       password: password,
+      firstName: "",
+      lastName: "",
       role: 'STUDENT',
     });
     console.log(`Logged in as username: ${username}`);

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PasswordStrengthMeter from '../PasswordStrengthMeter/PasswordStrengthMeter';
 import { useAppContext } from '../../contexts/AppContext';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -16,18 +17,29 @@ export default function Register() {
 
   const nav = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password1 != password2) {
+    if (password1 !== password2) {
       console.log('passwords do not match');
     } else if (role === "STUDENT" || role === "EDUCATOR"){
-      // TODO: axios request
-      setUser({
-        id: 0,
+      // TODO: firstName/lastName?
+      const data = {
         username: username,
         email: email,
         password: password1,
-        role: role,
+        firstName: "",
+        lastName: "",
+        role: role === "STUDENT" ? "Student" : "Educator",
+      }
+      const res = await axios.post("http://localhost:8080/api/v1/user/register", data);
+      setUser({
+        id: res.data.id,
+        username: res.data.username,
+        email: res.data.email,
+        password: res.data.password,
+        firstName: res.data.firstName,
+        lastName: res.data.lastName,
+        role: res.data.role.toUpperCase(),
       });
       console.log(`Registered as a ${role} with username: ${username}`);
     } else {
