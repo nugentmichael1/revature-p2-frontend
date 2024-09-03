@@ -1,54 +1,33 @@
-import React from 'react';
-
-import Dashboard from '../../components/Dashboard/Dashboard.tsx';
-import LeftSidebar from '../../components/Dashboard/LeftSidebar.tsx';
-import CourseTable from '../../components/Dashboard/CourseTable.tsx';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Dashboard from '../../components/Dashboard/Dashboard';
+import LeftSidebar from '../../components/Dashboard/LeftSidebar';
+import CourseTable from '../../components/Dashboard/CourseTable';
+import { useAppContext } from '../../contexts/AppContext';
 
 const DashboardPage: React.FC = () => {
+  const { state } = useAppContext();
+  const userRole = state.user?.role;
+  const navigate = useNavigate(); 
 
-  type Teacher = {
-    role: 'teacher';
-    name: string;
-    subject: string;
-    yearsOfExperience: number;
-  };
-  
-  type Student = {
-    role: 'student';
-    name: string;
-    gradeLevel: string;
-    gpa: number;
-  };
-  
-  type Person = Teacher | Student;
-  
+  useEffect(() => {
+    if (!userRole) {
+      navigate('/'); 
+    }
+  }, [userRole, navigate]);
 
-  const teacher1: Person = {
-    role: 'teacher',
-    name: 'Jane Doe',
-    subject: 'Mathematics',
-    yearsOfExperience: 10,
-  };
-  
-  const student1: Person = {
-    role: 'student',
-    name: 'John Smith',
-    gradeLevel: '10th Grade',
-    gpa: 3.8,
-  };
-  
-  
+  if (!userRole) {
+    return null; 
+  }
 
   return (
-      <>
-          <div className="flex">
+    <div className="flex">
       <LeftSidebar />
       <div className="flex-1 p-6">
-          <Dashboard />
-          <CourseTable person={student1}/>
+        <Dashboard />
+        <CourseTable role={userRole} />
       </div>
     </div>
-      </> 
   );
 }
 

@@ -9,11 +9,10 @@ const LeftSidebar: React.FC = () => {
   };
 
   return (
-    <div className={`h-screen bg-white p-10 flex flex-col justify-around shadow-lg ${isCollapsed ? 'w-20' : 'w-4064'} transition-all duration-300`}>
+    <div className={`h-screen bg-white p-10 flex flex-col justify-around shadow-lg ${isCollapsed ? 'w-30' : 'w-4064'} transition-all duration-300`}>
       <div>
         <div className="flex justify-between items-center mb-10">
           <h1 className={`text-2xl font-bold flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
-
             {!isCollapsed && "Dashboard"} <span className="text-gray-500 ml-1 text-sm">{!isCollapsed}</span>
           </h1>
           <button onClick={toggleSidebar} className="focus:outline-none">
