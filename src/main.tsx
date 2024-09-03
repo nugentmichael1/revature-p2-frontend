@@ -11,6 +11,7 @@ import { AppProvider } from "./contexts/AppContext";
 import Home from './components/Home/Home';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import AllCourses from './pages/AllCourses/AllCourses';
+import Exam from './pages/Exam/Exam';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -25,6 +26,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/createcourse" element={<CreateCourse />} />
         <Route path='/courses' element={<AllCourses />} />
         <Route path="/discussion" element={<DiscussionBoard />} />
+        <Route path="/exam" element={<Exam />} />
+
       </Route>
     </Routes>
     </AppProvider>
