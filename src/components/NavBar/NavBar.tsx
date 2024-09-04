@@ -39,7 +39,7 @@ function NavBar() {
             </div>
           ):(
             <div>
-              <Link to="/register"><button className="sign-in-button">Sign In</button></Link>
+              <Link to="/login"><button className="sign-in-button">Sign In</button></Link>
               <Link to="/register"><button className="register-button bg-primary-500">Become a Member</button></Link>
             </div>
           )}
