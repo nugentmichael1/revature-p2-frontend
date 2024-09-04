@@ -39,7 +39,7 @@ function NavBar() {
             </div>
           ):(
             <div>
-              <Link to="/register"><button className="sign-in-button">Sign In</button></Link>
+              <Link to="/login"><button className="sign-in-button">Sign In</button></Link>
               <Link to="/register"><button className="register-button bg-primary-500">Become a Member</button></Link>
             </div>
           )}
@@ -77,11 +77,16 @@ function NavBarLogo() {
 }
 
 function NavBarLinks() {
+  const {
+    state: { user }
+  } = useAppContext();
   return (
     <div className="navbar-links">
       <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/services">Services</a>
+      {user &&
+      <a href="/dashboard">Dashboard</a>
+      }
+      <a href="/courses">Courses</a>
       <a href="/contact">Contact</a>
     </div>
   )
