@@ -77,11 +77,16 @@ function NavBarLogo() {
 }
 
 function NavBarLinks() {
+  const {
+    state: { user }
+  } = useAppContext();
   return (
     <div className="navbar-links">
       <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/services">Services</a>
+      {user &&
+      <a href="/dashboard">Dashboard</a>
+      }
+      <a href="/courses">Courses</a>
       <a href="/contact">Contact</a>
     </div>
   )

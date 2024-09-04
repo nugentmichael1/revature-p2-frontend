@@ -1,9 +1,12 @@
 import javaScriptLogo from '../../assets/JavaScript-logo.png';
 import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const CourseCard = () => {
+  const nav = useNavigate();
+
   return (
-    <div className='flex w-full items-center gap-4 rounded-lg p-4 shadow-2xl'>
+    <div className='flex w-full items-center gap-4 rounded-lg p-4 shadow-2xl' onClick={() => {nav('/course/1')}}>
       <img src={javaScriptLogo} alt='javascript' className='w-40' />
       <div className='flex h-full grow flex-col justify-between pb-4'>
         <div className='flex flex-col gap-2'>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Overview from './overview';
-import Discussion from '../Discussions/Discussion';
+import Overview from './Overview';
 import Students from './Students';
+import DiscussionBoard from '../Discussions/DiscussionBoard';
 
 const CourseNavBar: React.FC = () => {
     const [active, setActive] = useState("Overview");
@@ -19,7 +19,8 @@ const CourseNavBar: React.FC = () => {
             </div>
             <div className="flex justify-between items-center bg-gray-200 p-4">                               
                 {active === "Overview" && <Overview />}
-
+                {/* pass actual courseId as prop */}
+                {active === "Discussion" && <DiscussionBoard courseId={1}/>}
                 {active === "Students" && <Students />}                  
             </div>
         </div>
