@@ -3,13 +3,13 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './index.css';
 import Layout from '../src/pages/Layout/layout';
-import DiscussionBoard from "./components/Discussions/DiscussionBoard";
 import CreateCourse from "./pages/CreateCourse/CreateCourse";
 import SignInRegister from "./pages/SignInRegisterPage/SignInRegisterPage";
 import { AppProvider } from "./contexts/AppContext";
 import Home from './components/Home/Home';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import AllCourses from './pages/AllCourses/AllCourses';
+import Exam from './pages/Exam/Exam';
 import CoursePage from './pages/Course/CoursePage';
 
 createRoot(document.getElementById('root')!).render(
@@ -24,7 +24,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/createcourse" element={<CreateCourse />} />
         <Route path='/courses' element={<AllCourses />} />
-        <Route path="/discussion" element={<DiscussionBoard />} />
+        <Route path="/exam" element={<Exam />} />
         <Route path='/course' element={<CoursePage />} />
       </Route>
     </Routes>
