@@ -1,17 +1,9 @@
 import React from 'react';
 
-type Course = {
-  name: string;
-  instructor: string;
-  phone: string;
-  email: string;
-  grade: string;
-  status: 'Active' | 'Inactive';
-};
+interface CourseTableProps {
+  role: string | undefined; 
+}
 
-type CourseTableProps = {
-  person: Person;
-};
 
 const teacherCourses: Course[] = [
   { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Active' },
@@ -23,13 +15,13 @@ const studentCourses: Course[] = [
   { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'B', status: 'Inactive' }
 ];
 
-const CourseTable: React.FC<CourseTableProps> = ({ person }) => {
-  const courses = person.role === 'teacher' ? teacherCourses : studentCourses;
+const CourseTable: React.FC<CourseTableProps> = ({ role }) => {
+  const courses = role === 'EDUCATOR' ? teacherCourses : studentCourses;
 
   return (
     <div className="p-4 bg-white rounded-lg shadow">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">{person.role === 'teacher' ? 'Courses Taught' : 'Courses Enrolled'}</h2>
+        <h2 className="text-xl font-bold">{role === 'EDUCATOR' ? 'Courses Taught' : 'Courses Enrolled'}</h2>
         <div className="flex items-center">
           <input
             type="text"
