@@ -1,22 +1,36 @@
 import React from 'react';
+import axios from 'axios';
 
-interface CourseTableProps {
-  role: string | undefined; 
+interface Course {
+  name: string;
+  instructor: string;
+  phone: string;
+  email: string;
+  grade: string;
+  status: string;
 }
 
+interface CourseTableProps {
+  role: string | undefined;
+  courseId: string;
+}
 
-const teacherCourses: Course[] = [
-  { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Active' },
-  { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Inactive' }
-];
+const CourseTable: React.FC<CourseTableProps> = ({ role, courseId }) => {
+  const [courses, setCourses] = React.useState<Course[]>([]);
 
-const studentCourses: Course[] = [
-  { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'A', status: 'Active' },
-  { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'B', status: 'Inactive' }
-];
+  React.useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/v1/user/1`);
+        setCourses(response.data);
+        console.log('Courses:', response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
 
-const CourseTable: React.FC<CourseTableProps> = ({ role }) => {
-  const courses = role === 'EDUCATOR' ? teacherCourses : studentCourses;
+    fetchCourses();
+  }, [courseId]);
 
   return (
     <div className="p-4 bg-white rounded-lg shadow">
