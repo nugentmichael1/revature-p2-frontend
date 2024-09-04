@@ -12,10 +12,10 @@ interface Course {
 
 interface CourseTableProps {
   role: string | undefined;
-  courseId: string;
+  
 }
 
-const CourseTable: React.FC<CourseTableProps> = ({ role, courseId }) => {
+const CourseTable: React.FC<CourseTableProps> = ({ role }) => {
   const [courses, setCourses] = React.useState<Course[]>([]);
 
   React.useEffect(() => {
@@ -30,7 +30,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, courseId }) => {
     };
 
     fetchCourses();
-  }, [courseId]);
+  }, []);
 
   return (
     <div className="p-4 bg-white rounded-lg shadow">
