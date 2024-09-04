@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '../../types/jwtpayload';
 
 export default function SignIn() {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {
     state: { user },
@@ -19,38 +20,43 @@ export default function SignIn() {
     const data = {
       username: username,
       password: password,
+    };
+    const res = await axios.post(
+      'http://localhost:8080/api/v1/user/login',
+      data,
+    );
+    const token = jwtDecode<JwtPayload>(res.data.accessToken);
+    const userId = Number(token.sub);
+    if (token) {
+      if (isNaN(userId)) {
+        console.log('Invalid JWT subject');
+      } else {
+        setUser({
+          id: userId,
+          username: token.username,
+          email: token.email,
+          firstName: token.firstName,
+          lastName: token.lastName,
+          role: token.role.toUpperCase() as
+            | 'STUDENT'
+            | 'EDUCATOR'
+            | 'INSTITUTION',
+        });
+      }
+    } else {
+      console.log('Invalid token.');
     }
-    const res = await axios.post("http://localhost:8080/api/v1/user/login", data);
-    console.log(res.data);
-    // TODO: set res values
-    setUser({
-      id: 0,
-      username: username,
-      email: email,
-      password: password,
-      firstName: "",
-      lastName: "",
-      role: 'STUDENT',
-    });
     console.log(`Logged in as username: ${username}`);
   };
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+  const handleInputChange = (
+    setter: React.Dispatch<React.SetStateAction<string>>,
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setter(e.target.value);
   };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  // TODO: implement logout elsewhere
-  useEffect(() => {
-    setUser(null);
-  }, []);
+  
+  const handleUsernameChange = handleInputChange(setUsername);
+  const handlePasswordChange = handleInputChange(setPassword);
 
   useEffect(() => {
     if (user && user.username) {

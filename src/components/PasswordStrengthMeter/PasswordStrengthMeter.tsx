@@ -51,7 +51,7 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({ password 
       case 5:
         return 'Very Strong';
       default:
-        return '';
+        return '\u00A0';
     }
   };
 
