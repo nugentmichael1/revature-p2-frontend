@@ -34,8 +34,8 @@ export const useAppContext = () => {
 // TODO: don't handle users in localStorage?
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<AppState>(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedCourses = localStorage.getItem("courses");
+    const storedUser = localStorage.getItem("revlearn-user");
+    const storedCourses = localStorage.getItem("revlearn-courses");
     return {
       user: storedUser ? JSON.parse(storedUser) : null,
       courses: storedCourses ? JSON.parse(storedCourses) : null,
@@ -45,15 +45,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (state.user) {
-      localStorage.setItem('user', JSON.stringify(state.user));
+      localStorage.setItem('revlearn-user', JSON.stringify(state.user));
     } else {
-      localStorage.removeItem('user');
+      localStorage.removeItem('revlearn-user');
     }
 
     if (state.courses) {
-      localStorage.setItem('courses', JSON.stringify(state.courses));
+      localStorage.setItem('revlearn-courses', JSON.stringify(state.courses));
     } else {
-      localStorage.removeItem('courses');
+      localStorage.removeItem('revlearn-courses');
     }
     // Handle additional state changes here
   }, [state.user, state.courses]);
