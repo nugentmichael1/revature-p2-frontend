@@ -12,11 +12,13 @@ const CourseModule = () => {
     <>
       <div className='border-t-2 border-slate-200'>
         <div
-          className='flex items-center justify-between bg-slate-100 p-4'
+          className='flex items-center justify-between gap-2 bg-slate-100 p-4 text-sm'
           onClick={() => setIsOpen(!isOpen)}
         >
           <div>
-            <h3>Section 1: Getting Started with iOS Development and Swift 5</h3>
+            <h3 className='font-bold'>
+              Section 1: Getting Started with iOS Development and Swift 5
+            </h3>
             <p>14/14 | 54min</p>
           </div>
           <IconContext.Provider
@@ -34,9 +36,11 @@ const CourseModule = () => {
         {isOpen && <ModulePage />}
       </div>
       <div className='border-t-2 border-slate-200'>
-        <div className='flex items-center justify-between bg-slate-100 p-4'>
+        <div className='flex items-center justify-between gap-2 bg-slate-100 p-4 text-sm'>
           <div>
-            <h3>Section 1: Getting Started with iOS Development and Swift 5</h3>
+            <h3 className='font-bold'>
+              Section 1: Getting Started with iOS Development and Swift 5
+            </h3>
             <p>14/14 | 54min</p>
           </div>
           <IconContext.Provider
@@ -49,9 +53,11 @@ const CourseModule = () => {
         </div>
       </div>
       <div className='border-t-2 border-slate-200'>
-        <div className='flex items-center justify-between bg-slate-100 p-4'>
+        <div className='flex items-center justify-between gap-2 bg-slate-100 p-4 text-sm'>
           <div>
-            <h3>Section 1: Getting Started with iOS Development and Swift 5</h3>
+            <h3 className='font-bold'>
+              Section 1: Getting Started with iOS Development and Swift 5
+            </h3>
             <p>14/14 | 54min</p>
           </div>
           <IconContext.Provider
