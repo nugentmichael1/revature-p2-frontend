@@ -31,6 +31,7 @@ export default function SignIn() {
       if (isNaN(userId)) {
         console.log('Invalid JWT subject');
       } else {
+        localStorage.setItem('revlearn-token', res.data.accessToken);
         setUser({
           id: userId,
           username: token.username,
