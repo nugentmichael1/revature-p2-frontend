@@ -8,6 +8,7 @@ import { JwtPayload } from '../../types/jwtpayload';
 export default function SignIn() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const {
     state: { user },
     setUser,
@@ -21,41 +22,48 @@ export default function SignIn() {
       username: username,
       password: password,
     };
-    const res = await axios.post(
-      'http://localhost:8080/api/v1/user/login',
-      data,
-    );
-    const token = jwtDecode<JwtPayload>(res.data.accessToken);
-    const userId = Number(token.sub);
-    if (token) {
-      if (isNaN(userId)) {
-        console.log('Invalid JWT subject');
+    try {
+      const res = await axios.post(
+        'http://localhost:8080/api/v1/user/login',
+        data,
+      );
+      const token = jwtDecode<JwtPayload>(res.data.accessToken);
+      const userId = Number(token.sub);
+      if (token) {
+        if (isNaN(userId)) {
+          return setErrorMsg('An error occured with token generation.');
+        } else {
+          localStorage.setItem('revlearn-token', res.data.accessToken);
+          setUser({
+            id: userId,
+            username: token.username,
+            email: token.email,
+            firstName: token.firstName,
+            lastName: token.lastName,
+            role: token.role.toUpperCase() as
+              | 'STUDENT'
+              | 'EDUCATOR'
+              | 'INSTITUTION',
+          });
+        }
       } else {
-        localStorage.setItem('revlearn-token', res.data.accessToken);
-        setUser({
-          id: userId,
-          username: token.username,
-          email: token.email,
-          firstName: token.firstName,
-          lastName: token.lastName,
-          role: token.role.toUpperCase() as
-            | 'STUDENT'
-            | 'EDUCATOR'
-            | 'INSTITUTION',
-        });
+        return setErrorMsg('Internal error.');
       }
-    } else {
-      console.log('Invalid token.');
+    } catch (e: any) {
+      if (axios.isAxiosError(e) && e.response) {
+        setErrorMsg(e.response.data.message || e.response.data || 'An error occurred.');
+      } else {
+        setErrorMsg(e.message || 'An unexpected error occured.');
+      }
     }
-    console.log(`Logged in as username: ${username}`);
   };
 
-  const handleInputChange = (
-    setter: React.Dispatch<React.SetStateAction<string>>,
-  ) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setter(e.target.value);
-  };
-  
+  const handleInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+    };
+
   const handleUsernameChange = handleInputChange(setUsername);
   const handlePasswordChange = handleInputChange(setPassword);
 
@@ -113,6 +121,8 @@ export default function SignIn() {
             >
               Sign In
             </button>
+            <p className='col-span-1 mt-2 block text-sm font-medium text-center text-red-700'>{errorMsg}</p>
+
           </div>
         </form>
       </div>

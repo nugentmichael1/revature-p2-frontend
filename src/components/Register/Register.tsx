@@ -13,6 +13,8 @@ export default function Register() {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
   const [role, setRole] = useState<'STUDENT' | 'EDUCATOR'>('STUDENT');
   const {
     state: { user },
@@ -24,7 +26,7 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password1 !== password2) {
-      console.log('passwords do not match');
+      return setPasswordsMatch(false);
     } else if (role === 'STUDENT' || role === 'EDUCATOR') {
       const data = {
         username: username,
@@ -34,21 +36,28 @@ export default function Register() {
         lastName: lastName,
         role: role === 'STUDENT' ? 'Student' : 'Educator',
       };
-      const res = await axios.post(
-        'http://localhost:8080/api/v1/user/register',
-        data,
-      );
-      setUser({
-        id: res.data.id,
-        username: res.data.username,
-        email: res.data.email,
-        firstName: res.data.firstName,
-        lastName: res.data.lastName,
-        role: res.data.role.toUpperCase(),
-      });
-      console.log(`Registered as a ${role} with username: ${username}`);
+      try {
+        const res = await axios.post(
+          'http://localhost:8080/api/v1/user/register',
+          data,
+        );
+        setUser({
+          id: res.data.id,
+          username: res.data.username,
+          email: res.data.email,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          role: res.data.role.toUpperCase(),
+        });
+      } catch (e: any) {
+        if (axios.isAxiosError(e) && e.response) {
+          setErrorMsg(e.response.data || 'An error occurred.');
+        } else {
+          setErrorMsg(e.message || 'An unexpected error occured.');
+        }
+      }
     } else {
-      console.log('Invalid role attempted to be sent.');
+      setErrorMsg('Invalid role attempted to be sent.');
     }
   };
 
@@ -70,7 +79,7 @@ export default function Register() {
     if (value === 'STUDENT' || value === 'EDUCATOR') {
       setRole(value);
     } else {
-      console.log('Invalid role selected');
+      setErrorMsg('Invalid role selected');
     }
   };
 
@@ -159,7 +168,7 @@ export default function Register() {
             />
           </div>
 
-          <div className='col-span-2 relative'>
+          <div className='relative col-span-2'>
             <label
               htmlFor='password1'
               className='mb-2 block text-sm font-medium text-gray-900'
@@ -169,12 +178,13 @@ export default function Register() {
             <input
               id='password1'
               type={passwordVisible ? 'text' : 'password'}
+              minLength={6}
               required
               onChange={handlePassword1Change}
-              className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm focus:border-secondary-600 focus:ring-secondary-600 sm:text-sm pr-10'
+              className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pr-10 text-gray-900 shadow-sm focus:border-secondary-600 focus:ring-secondary-600 sm:text-sm'
             />
             <div
-              className='absolute inset-y-0 right-3 bottom-3 flex cursor-pointer items-center'
+              className='absolute inset-y-0 bottom-3.5 right-3 flex cursor-pointer items-center'
               onClick={togglePasswordVisibility}
             >
               {passwordVisible ? (
@@ -198,8 +208,12 @@ export default function Register() {
               type='password'
               required
               onChange={handlePassword2Change}
-              className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm focus:border-secondary-600 focus:ring-secondary-600 sm:text-sm'
+              // className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm focus:border-secondary-600 focus:ring-secondary-600 sm:text-sm'
+              className={`block w-full rounded-lg border p-2.5 text-gray-900 shadow-sm focus:border-secondary-600 focus:ring-secondary-600 sm:text-sm ${passwordsMatch ? 'border-gray-300 bg-gray-50' : 'border-red-500 bg-red-50'}`}
             />
+            {!passwordsMatch && (
+              <p className='text-red-500'>Passwords must match.</p>
+            )}
           </div>
 
           <div className='col-span-2'>
@@ -228,6 +242,8 @@ export default function Register() {
               Sign Up
             </button>
           </div>
+          <p className='col-span-2 block text-sm font-medium text-center text-red-700'>{errorMsg}</p>
+
         </form>
       </div>
     </>
