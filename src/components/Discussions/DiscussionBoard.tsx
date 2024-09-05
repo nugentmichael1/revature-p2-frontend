@@ -7,12 +7,12 @@ import axios from 'axios';
 
 
 type DiscussionType = {
-    id?: number,
-    title: string,
-    author: string,
-    time: string,
-    description: string,
-    comments: []
+    discussionBoardId?: number,
+    courseId: number,
+    discussionBoardTitle: string,
+    userId: number,
+    discussionBoardDescription: string,
+    discussionPosts?: []
 }
 
 type DiscussionBoardProps = {
@@ -24,6 +24,8 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
     const url = import.meta.env.VITE_APP_API_URL;
     const { state } = useAppContext();
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [usernamesById, setUsernamesById] = useState<{[key: number]: string}>({});
     
     const [discussions, setDiscussions] = useState<DiscussionType[]>([]);
     const [discussionIsSelected, setDiscussionIsSelected] = useState(false);
@@ -44,9 +46,14 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
 
     const getDiscussions = async () => {
         try {
-			const response = await axios.get(`${url}/discussion/${courseId}`);
+			const response = await axios.get(`${url}/discussion_board/${courseId}`);
             if (response.headers['content-type'].includes('application/json')) {
                 setDiscussions(response.data);
+
+                if (Object.keys(usernamesById).length === 0) {
+                    getUsernames();
+                }
+
             } else {
                 throw Error("Unexpected response type");
             }
@@ -54,6 +61,26 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
 			console.error("Error getting discussions: ", error);
             setErrorMessage("Error getting discussions")
 		}
+    }
+
+
+    const getUsernames = async () => {
+        try {
+            const response = await axios.get(`${url}/user`);
+            if (response.headers['content-type'].includes('application/json')) {
+                const data = response.data;
+                const newUserNamesById: {[key: number]: string} = {};
+
+                for (let i = 0; i < data.length; i++) {
+                    newUserNamesById[data[i].id] = data[i].username;
+                }
+
+                setUsernamesById(newUserNamesById);
+
+            }
+        } catch (error) {
+            console.error("Error getting usernames: ", error);
+        }
     }
 
 
@@ -66,19 +93,22 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
         if (newDiscussionTitle && state.user != null) {
 
             const newDiscussion: DiscussionType = {
-                title: newDiscussionTitle, 
-                author: state.user.username !== null ? state.user.username : "null", 
-                time: getCurrDateTime(), 
-                description: newDiscussionDescription, 
-                comments: []};
+                courseId: courseId,
+                userId: state.user.id, 
+                discussionBoardTitle: newDiscussionTitle, 
+                discussionBoardDescription: newDiscussionDescription
+            };
 
             try {
-                const response = await axios.post(`${url}/discussion/${courseId}`, newDiscussion);
+                await axios.post(`${url}/discussion_board`, newDiscussion);
 
+                newDiscussion.discussionPosts = [];
                 setDiscussions([...discussions, newDiscussion]);
                 setNewDiscussionTitle("");
                 setNewDiscussionDescription("");
                 setIsFormExpanded(false);
+
+                getDiscussions();
 
             } catch (error) {
                 console.error("Error adding discussion: ", error);
@@ -99,13 +129,14 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
     const handleDeselectCurrentDiscussion = () => {
         setDiscussionIsSelected(false);
         setCurrentDiscussion(null);
+        getDiscussions();
     };
 
 
     const handleDelete = async (i: number) => {
 
         try {
-			const response = await axios.delete(`${url}/discussion/${i}`);
+			await axios.delete(`${url}/discussion_board/${discussions[i].discussionBoardId}`);
 			
             const newDiscussions = [...discussions];
             newDiscussions.splice(i, 1);
@@ -122,8 +153,8 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
 
     const handleEdit = (i: number) => {
         setDiscussionBeingEdited(i);
-        setEditedDiscussionTitle(discussions[i].title);
-        setEditedDiscussionDescription(discussions[i].description);
+        setEditedDiscussionTitle(discussions[i].discussionBoardTitle);
+        setEditedDiscussionDescription(discussions[i].discussionBoardDescription);
     }
 
 
@@ -131,23 +162,24 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
         if (discussionBeingEdited !== null) {
             const curr = discussions[discussionBeingEdited];
             
-            if (curr !== null && (curr.title !== editedDiscussionTitle || curr.description !== editedDiscussionDescription)) {
+            if (curr !== null && (curr.discussionBoardTitle !== editedDiscussionTitle || curr.discussionBoardDescription !== editedDiscussionDescription)) {
                 const newDiscussions = [...discussions];
                 newDiscussions[discussionBeingEdited] = {
-                    title: editedDiscussionTitle,
-                    author: curr.author,
-                    time: getCurrDateTime(),
-                    description: editedDiscussionDescription,
-                    comments: curr.comments
+                    courseId: courseId,
+                    userId: curr.userId,
+                    discussionBoardTitle: editedDiscussionTitle,
+                    discussionBoardDescription: editedDiscussionDescription
                 };
 
                 try {
-                    const response = await axios.put(`${url}/discussion/${discussionBeingEdited}`, {editedDiscussionTitle, editedDiscussionDescription});
+                    await axios.put(`${url}/discussion_board/${discussions[discussionBeingEdited].discussionBoardId}`, newDiscussions[discussionBeingEdited]);
 
                     setDiscussions(newDiscussions);
                     setEditedDiscussionTitle("");
                     setEditedDiscussionDescription("");
                     setDiscussionBeingEdited(null);
+
+                    getDiscussions();
 
                 } catch (error) {
                     console.error("Error updating discussion: ", error);
@@ -173,29 +205,6 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
             setAddDiscussionErrorMessage("Must be logged in to add a discussion.");
         }
     }, []);
-
-
-    const getCurrDateTime = (): string => {
-        let date: Date = new Date();
-        return date.toUTCString();
-    };
-
-    const timeAgo = (postDateTime: string): string => {
-        let currDateTime = new Date(getCurrDateTime());
-        let postDate = new Date(postDateTime);
-        let diffInSeconds = Math.floor((currDateTime.getTime() - postDate.getTime()) / 1000);
-    
-        let interval = Math.floor(diffInSeconds / 86400);
-        if (interval >= 1) return interval + " day" + (interval > 1 ? "s" : "") + " ago";
-    
-        interval = Math.floor(diffInSeconds / 3600);
-        if (interval >= 1) return interval + " hour" + (interval > 1 ? "s" : "") + " ago";
-    
-        interval = Math.floor(diffInSeconds / 60);
-        if (interval >= 1) return interval + " minute" + (interval > 1 ? "s" : "") + " ago";
-    
-        return diffInSeconds + " second" + (diffInSeconds > 1 ? "s" : "") + " ago";
-    };
 
 
     return (<>
@@ -251,8 +260,8 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
                                 className="m-4 p-4 rounded border border-gray-300 hover:bg-gray-200 hover:cursor-pointer"
                                 onClick={() => handleSetCurrentDiscussion(discussion)}>
                                     <div className="flex justify-between items-center">
-                                        <p className="mb-2"><strong>{discussion.title}</strong></p>
-                                        {state.user !== null && (state.user.role === "EDUCATOR" || state.user.role === "INSTITUTION"|| state.user.username === discussion.author) && (
+                                        <p className="text-xl font-bold">{discussion.discussionBoardTitle}</p>
+                                        {state.user !== null && (state.user.role === "EDUCATOR" || state.user.role === "INSTITUTION"|| state.user.id === discussion.userId) && (
                                             <div className="relative">
                                                 <button
                                                     onClick={(e) => {e.stopPropagation(); toggleDropdown(i)}}
@@ -278,10 +287,9 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
                                     {
                                         (discussionBeingEdited === null || discussionBeingEdited !== i) ? (
                                             <div>
-                                                <p>{discussion.author}</p>
-                                                <p>{timeAgo(discussion.time)}</p>
-                                                <p>{discussion.description}</p>
-                                                <p>{discussion.comments.length} comments</p>
+                                                <p className="text-xl mt-2">{discussion.discussionBoardDescription}</p>
+                                                <p className="mt-2">created by: {usernamesById[discussion.userId]}</p>
+                                                <p>{(discussion.discussionPosts != undefined) ? discussion.discussionPosts.length : 0} comments</p>
                                             </div>
                                         ) : (
                                             <div>
@@ -290,12 +298,12 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
                                                     rows={1}
                                                     value={editedDiscussionTitle}
                                                     onChange={(e) => {e.stopPropagation(); setEditedDiscussionTitle(e.target.value)}}
-                                                >{discussion.title}</textarea>
+                                                >{discussion.discussionBoardTitle}</textarea>
                                                 <label>Description: </label><textarea
                                                     className="bg-white w-full p-2 mb-2 border rounded"
                                                     value={editedDiscussionDescription}
                                                     onChange={(e) => {e.stopPropagation(); setEditedDiscussionDescription(e.target.value)}}
-                                                >{discussion.description}</textarea>
+                                                >{discussion.discussionBoardDescription}</textarea>
                                                 <button
                                                     className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
                                                     onClick={(e) => {e.stopPropagation(); handleCancelUpdateDiscussion()}}
@@ -320,7 +328,7 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
                         className="bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-500 rounded shadow"
                         onClick={handleDeselectCurrentDiscussion}
                     >Go Back</button>
-                    <Discussion discussion={currentDiscussion} />
+                    <Discussion discussion={currentDiscussion} usersById={usernamesById}/>
                 </div>
             )}
 

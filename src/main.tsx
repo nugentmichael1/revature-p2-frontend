@@ -19,13 +19,13 @@ createRoot(document.getElementById('root')!).render(
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="/register" element={<SignInRegister reg={true} />} />
-        <Route path="/login" element={<SignInRegister reg={false} />} />
+        <Route path="/register" element={<SignInRegister />} />
+        <Route path="/login" element={<SignInRegister />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/createcourse" element={<CreateCourse />} />
         <Route path='/courses' element={<AllCourses />} />
         <Route path="/exam" element={<Exam />} />
-        <Route path='/course' element={<CoursePage />} />
+        <Route path='/course/:courseId' element={<CoursePage />} />
       </Route>
     </Routes>
     </AppProvider>
