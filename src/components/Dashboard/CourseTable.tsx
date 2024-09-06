@@ -1,22 +1,37 @@
 import React from 'react';
+import axios from 'axios';
 
-interface CourseTableProps {
-  role: string | undefined; 
+interface Course {
+  name: string;
+  description: string;
+  attendanceMethod: string;
+  startDate: Date;
+  endDate: Date;
 }
 
+interface CourseTableProps {
+  role: string | undefined;
+  id: number | undefined;
+  
+}
 
-const teacherCourses: Course[] = [
-  { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Active' },
-  { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Inactive' }
-];
+const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
+  const [courses, setCourses] = React.useState<Course[]>([]);
 
-const studentCourses: Course[] = [
-  { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'A', status: 'Active' },
-  { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'B', status: 'Inactive' }
-];
+  React.useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(role === 'EDUCATOR' ? `http://localhost:8080/api/v1/course`
+          : `http://localhost:8080/api/v1/user/${id}/enrolledCourses`);
+        setCourses(response.data);
+        console.log('Courses:', response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
 
-const CourseTable: React.FC<CourseTableProps> = ({ role }) => {
-  const courses = role === 'EDUCATOR' ? teacherCourses : studentCourses;
+    fetchCourses();
+  }, []);
 
   return (
     <div className="p-4 bg-white rounded-lg shadow">
@@ -37,29 +52,28 @@ const CourseTable: React.FC<CourseTableProps> = ({ role }) => {
       <table className="min-w-full bg-white">
         <thead>
           <tr>
-            <th className="py-2">Course</th>
-            <th className="py-2">Instructor</th>
-            <th className="py-2">Phone Number</th>
-            <th className="py-2">Email</th>
-            <th className="py-2">Grade</th>
-            <th className="py-2">Status</th>
+            <th className="py-2">Name</th>
+            <th className="py-2">Description</th>
+            <th className="py-">Attendance Method</th>
+            <th className="py-2">StartDate</th>
+            <th className="py-2">EndDate</th>
           </tr>
         </thead>
         <tbody>
           {courses.map((course, index) => (
             <tr key={index} className="text-center">
               <td className="py-2">{course.name}</td>
-              <td className="py-2">{course.instructor}</td>
-              <td className="py-2">{course.phone}</td>
-              <td className="py-2">{course.email}</td>
-              <td className="py-2">{course.grade}</td>
+              <td className="py-2">{course.description}</td>
+              <td className="py-2">{course.attendanceMethod}</td>
+              <td className="py-2">{course.startDate.toString()}</td>
+              <td className="py-2">{course.endDate.toString()}</td>
               <td className="py-2">
                 <span
                   className={`px-2 py-1 rounded-full text-white ${
-                    course.status === 'Active' ? 'bg-green-500' : 'bg-red-500'
+                    course.startDate >= new Date() ? 'bg-green-500' : 'bg-red-500'
                   }`}
                 >
-                  {course.status}
+                  {course.startDate.toString()}
                 </span>
               </td>
             </tr>

@@ -8,6 +8,7 @@ import { useAppContext } from '../../contexts/AppContext';
 const DashboardPage: React.FC = () => {
   const { state } = useAppContext();
   const userRole = state.user?.role;
+  const userId = state.user?.id;
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -19,13 +20,27 @@ const DashboardPage: React.FC = () => {
   if (!userRole) {
     return null; 
   }
+  
+  const handleClick = () => {
+      navigate('/createcourse');
+  }
 
   return (
     <div className="flex">
       <LeftSidebar />
       <div className="flex-1 p-6">
         <Dashboard />
-        <CourseTable role={userRole} />
+        <CourseTable role={userRole} id={userId} />
+        
+        
+        <div className="text-right mt-4">
+          <button 
+            onClick={handleClick} 
+            className="px-5 py-2 bg-sky-600 text-white rounded hover:bg-blue-700"
+          >
+            Create Course
+          </button>
+        </div>
       </div>
     </div>
   );
