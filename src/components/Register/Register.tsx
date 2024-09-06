@@ -4,6 +4,8 @@ import { useAppContext } from '../../contexts/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
+import { JwtPayload } from '../../types/jwtpayload';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -34,24 +36,31 @@ export default function Register() {
         password: password1,
         firstName: firstName,
         lastName: lastName,
-        role: role === 'STUDENT' ? 'Student' : 'Educator',
+        role: role,
       };
       try {
         const res = await axios.post(
           'http://localhost:8080/api/v1/user/register',
           data,
         );
+        console.log(res.data);
+        const token = jwtDecode<JwtPayload>(res.data.JWT);
+        const userId = Number(token.sub);
         setUser({
-          id: res.data.id,
-          username: res.data.username,
-          email: res.data.email,
-          firstName: res.data.firstName,
-          lastName: res.data.lastName,
-          role: res.data.role.toUpperCase(),
+          id: userId,
+          username: token.username,
+          email: token.email,
+          firstName: token.firstName,
+          lastName: token.lastName,
+          role: token.role.toUpperCase() as
+              | 'STUDENT'
+              | 'EDUCATOR',
+          token: `Bearer ${res.data.JWT}`,
         });
       } catch (e: any) {
+        console.log(e);
         if (axios.isAxiosError(e) && e.response) {
-          setErrorMsg(e.response.data || 'An error occurred.');
+          setErrorMsg(e.message || e.response.data.message || e.response.data || 'An error occurred.');
         } else {
           setErrorMsg(e.message || 'An unexpected error occured.');
         }

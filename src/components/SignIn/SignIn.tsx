@@ -33,7 +33,6 @@ export default function SignIn() {
         if (isNaN(userId)) {
           return setErrorMsg('An error occured with token generation.');
         } else {
-          localStorage.setItem('revlearn-token', res.data.accessToken);
           setUser({
             id: userId,
             username: token.username,
@@ -42,8 +41,8 @@ export default function SignIn() {
             lastName: token.lastName,
             role: token.role.toUpperCase() as
               | 'STUDENT'
-              | 'EDUCATOR'
-              | 'INSTITUTION',
+              | 'EDUCATOR',
+            token: res.data.accessToken,
           });
         }
       } else {
