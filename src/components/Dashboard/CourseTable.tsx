@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface Course {
   name: string;
@@ -17,6 +18,7 @@ interface CourseTableProps {
 
 
 const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
+  const nav = useNavigate();
   const [courses, setCourses] = React.useState<Course[]>([]);
   console.log('Role:', role, 'ID:', id);
 
@@ -82,6 +84,14 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
             day: '2-digit',
             year: 'numeric',
           })}
+        </td>
+        <td className="py-2">
+          <button
+            onClick={() => nav(`/module/{id}`)}
+            className="px-2 py-1 bg-purple-600 text-white rounded"
+          >
+            View Module
+          </button>
         </td>
         <td className="py-2">
           <span

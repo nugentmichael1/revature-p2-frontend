@@ -12,6 +12,7 @@ interface LeftSidebarProps {
 
 const LeftSidebar: React.FC<LeftSidebarProps> = ({firstName,lastName,role }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
  const nav = useNavigate();
   const handlecoursebttn = () => {
     nav('/courses');
