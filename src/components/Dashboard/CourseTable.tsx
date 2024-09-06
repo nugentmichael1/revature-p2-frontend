@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface Course {
   name: string;
@@ -12,16 +13,19 @@ interface Course {
 interface CourseTableProps {
   role: string | undefined;
   id: number | undefined;
-  
 }
 
+
+
 const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
+  const nav = useNavigate();
   const [courses, setCourses] = React.useState<Course[]>([]);
+  console.log('Role:', role, 'ID:', id);
 
   React.useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(role === 'EDUCATOR' ? `http://localhost:8080/api/v1/course`
+        const response = await axios.get(role === 'EDUCATOR' ? `http://localhost:8080/api/v1/user/${id}/taughtCourses`
           : `http://localhost:8080/api/v1/user/${id}/enrolledCourses`);
         setCourses(response.data);
         console.log('Courses:', response.data);
@@ -60,25 +64,50 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
           </tr>
         </thead>
         <tbody>
-          {courses.map((course, index) => (
-            <tr key={index} className="text-center">
-              <td className="py-2">{course.name}</td>
-              <td className="py-2">{course.description}</td>
-              <td className="py-2">{course.attendanceMethod}</td>
-              <td className="py-2">{course.startDate.toString()}</td>
-              <td className="py-2">{course.endDate.toString()}</td>
-              <td className="py-2">
-                <span
-                  className={`px-2 py-1 rounded-full text-white ${
-                    course.startDate >= new Date() ? 'bg-green-500' : 'bg-red-500'
-                  }`}
-                >
-                  {course.startDate.toString()}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+  {courses.map((course, index) => {
+    const startDate = new Date(course.startDate);
+    return (
+      <tr key={index} className="text-center">
+        <td className="py-2">{course.name}</td>
+        <td className="py-2">{course.description}</td>
+        <td className="py-2">{course.attendanceMethod}</td>
+        <td className="py-2">
+          {startDate.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+          })}
+        </td>
+        <td className="py-2">
+          {new Date(course.endDate).toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+          })}
+        </td>
+        <td className="py-2">
+          <button
+            onClick={() => nav(`/module/{id}`)}
+            className="px-2 py-1 bg-purple-600 text-white rounded"
+          >
+            View Module
+          </button>
+        </td>
+        <td className="py-2">
+          <span
+            className={`px-2 py-1 rounded-full text-white ${
+              startDate >= new Date() ? 'bg-green-500' : 'bg-red-500'
+            }`}
+          >
+            {startDate >= new Date() ? 'Upcoming' : 'Ongoing'}
+          </span>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
+
       </table>
     </div>
   );
