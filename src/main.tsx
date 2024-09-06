@@ -11,6 +11,7 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import AllCourses from './pages/AllCourses/AllCourses';
 import Exam from './pages/Exam/Exam';
 import CoursePage from './pages/Course/CoursePage';
+import Profile from './pages/Profile/Profile';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path='/courses' element={<AllCourses />} />
         <Route path="/exam" element={<Exam />} />
         <Route path='/course/:courseId' element={<CoursePage />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
     </AppProvider>
