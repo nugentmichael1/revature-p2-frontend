@@ -21,7 +21,7 @@ type DiscussionBoardProps = {
 
 
 export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
-    const url = import.meta.env.VITE_APP_API_URL;
+    const url = import.meta.env.VITE_API_URL;
     const { state } = useAppContext();
     const [errorMessage, setErrorMessage] = useState("");
 
