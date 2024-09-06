@@ -100,6 +100,12 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
                 discussionBoardDescription: newDiscussionDescription
             };
 
+            // const config = {
+            //     headers: {
+            //       Authorization: state.user && state.user.token,
+            //     }
+            // };
+
             try {
                 await axios.post(`${url}/discussion_board`, newDiscussion);
 
