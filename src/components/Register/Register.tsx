@@ -40,10 +40,9 @@ export default function Register() {
       };
       try {
         const res = await axios.post(
-          'http://localhost:8080/api/v1/user/register',
+          `${import.meta.env.VITE_API_URL}/user/register`,
           data,
         );
-        console.log(res.data);
         const token = jwtDecode<JwtPayload>(res.data.JWT);
         const userId = Number(token.sub);
         setUser({
@@ -58,7 +57,6 @@ export default function Register() {
           token: `Bearer ${res.data.JWT}`,
         });
       } catch (e: any) {
-        console.log(e);
         if (axios.isAxiosError(e) && e.response) {
           setErrorMsg(e.message || e.response.data.message || e.response.data || 'An error occurred.');
         } else {
