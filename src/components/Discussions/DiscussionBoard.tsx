@@ -21,7 +21,7 @@ type DiscussionBoardProps = {
 
 
 export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
-    const url = import.meta.env.VITE_APP_API_URL;
+    const url = import.meta.env.VITE_API_URL;
     const { state } = useAppContext();
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -48,6 +48,7 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
         try {
 			const response = await axios.get(`${url}/discussion_board/${courseId}`);
             if (response.headers['content-type'].includes('application/json')) {
+
                 setDiscussions(response.data);
 
                 if (Object.keys(usernamesById).length === 0) {
@@ -98,6 +99,12 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
                 discussionBoardTitle: newDiscussionTitle, 
                 discussionBoardDescription: newDiscussionDescription
             };
+
+            // const config = {
+            //     headers: {
+            //       Authorization: state.user && state.user.token,
+            //     }
+            // };
 
             try {
                 await axios.post(`${url}/discussion_board`, newDiscussion);
