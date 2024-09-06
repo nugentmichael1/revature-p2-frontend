@@ -48,6 +48,7 @@ export default function DiscussionBoard({ courseId }: DiscussionBoardProps ) {
         try {
 			const response = await axios.get(`${url}/discussion_board/${courseId}`);
             if (response.headers['content-type'].includes('application/json')) {
+
                 setDiscussions(response.data);
 
                 if (Object.keys(usernamesById).length === 0) {
