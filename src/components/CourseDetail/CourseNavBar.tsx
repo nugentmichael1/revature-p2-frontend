@@ -22,7 +22,7 @@ const CourseNavBar: React.FC = () => {
             </div>
             <div className="flex justify-between items-center bg-gray-200 p-4">                               
                 {active === "Overview" && <Overview />}
-                {/* pass actual courseId as prop */}
+                {/* TODO: pass actual courseId as prop */}
                 {active === "Discussion" && <DiscussionBoard courseId={1}/>}
                 {active === "Students" && <Students />}                  
             </div>

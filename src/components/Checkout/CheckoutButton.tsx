@@ -1,16 +1,25 @@
 import React from 'react';
 import axios from 'axios';
 import { useAppContext } from "../../contexts/AppContext";
+import { useNavigate } from 'react-router-dom';
+
 
 const CheckoutButton: React.FC = () => {
 
     const url = import.meta.env.VITE_API_URL;
-
     const { state } = useAppContext();
+    const navigate = useNavigate();
 
     const handleCheckout = async () => {
+        if (!state.user) {
+            console.error('User not logged in.');
+            navigate('/login');
+            return;
+        }
+
+        // TODO: Implement actual course data
         const data = {
-            id: 12345,
+            id: state.user.id,
             name: "Java Course",
             description: "Java Full Stack Course",
             price: 29900,
@@ -22,10 +31,10 @@ const CheckoutButton: React.FC = () => {
             if (response.data && response.data.url) {
                 window.location.href = response.data.url;
             } else {
-                console.log('Payment processed, but no URL provided.');
+                console.log('Enrollment processed, but no url to payment provided.');
             }
         } catch (error) {
-            console.error('Error processing payment:', error);
+            console.error('Error processing enrollment:', error);
         }
     };
 
