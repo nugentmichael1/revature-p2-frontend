@@ -5,4 +5,4 @@ export interface Course {
     attendanceMethod?: string;
     name: string;
     description: string;
-  }
+}
