@@ -7,7 +7,11 @@ interface Question {
   answer: string;
 }
 
-const CreateExamForm: React.FC = () => {
+interface CreateExamFormProps {
+  moduleId: number;
+}
+
+const CreateExamForm: React.FC<CreateExamFormProps> = ({ moduleId }) => {
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
 
@@ -56,7 +60,7 @@ const CreateExamForm: React.FC = () => {
         type: "",
     }
     try {
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/exam`, data);
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/exam/module/${moduleId}`, data);
         console.log("Exam created successfully");
     } catch(e: any) {
         console.log(e);

@@ -29,7 +29,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path='/dashboard' element={<DashboardPage />} />
             <Route path='/createcourse' element={<CreateCourse />} />
             <Route path='/courses' element={<AllCourses />} />
-            <Route path='/exam' element={<Exam />} />
+            <Route path='/exam/:examId' element={<Exam />} />
             <Route path='/createexam' element={<CreateExam />} />
             <Route path='/course/:courseId' element={<CoursePage />} />
             <Route path='/checkout-success' element={<CheckoutSuccess />} />
