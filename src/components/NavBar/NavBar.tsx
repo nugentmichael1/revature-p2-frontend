@@ -12,35 +12,36 @@ import "./NavBar.css";
  * @returns the navbar object
  */
 function NavBar() {
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const toggleDropdown = () => {setIsDropdownOpen(!isDropdownOpen);};
+  // Use functional form to ensure state is updated properly
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
   const {
     state: { user },
-    setUser,
   } = useAppContext();
 
   return (
-    <> 
+    <>
       <nav className="navbar">
         <NavBarLogo />
-        
         <NavBarLinks />
-        
         <div className="navbar-profile" onClick={toggleDropdown}>
           {user && user.username ? (
             <div className="profile-icon">
               <ProfileImage />
               {isDropdownOpen && (
-                <DropdownMenu />
+                <DropdownMenu setIsDropdownOpen={setIsDropdownOpen} />
               )}
             </div>
-          ):(
+          ) : (
             <div>
-              <Link to="/login"><button className="sign-in-button">Sign In</button></Link>
-              <Link to="/register"><button className="register-button bg-primary-500">Become a Member</button></Link>
+              <Link to="/login">
+                <button className="sign-in-button">Sign In</button>
+              </Link>
+              <Link to="/register">
+                <button className="register-button bg-primary-500">Become a Member</button>
+              </Link>
             </div>
           )}
         </div>
@@ -49,23 +50,27 @@ function NavBar() {
   );
 }
 
-function DropdownMenu() {
+function DropdownMenu({ setIsDropdownOpen }: { setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   const {
     state: { user },
     setUser,
   } = useAppContext();
 
-  const logoutUser = () => {setUser(null);};
+  const logoutUser = () => {
+    setIsDropdownOpen(false);
+    setUser(null);
+    // You might want to add logic for navigating to a different page or clearing more state here
+  };
 
   return (
     <div className="dropdown-menu">
-    <ul>
-      <a href="/profile"><li>Profile</li></a>
-      <a href="/billing"><li>Billing</li></a>
-      <a href="/" onClick={logoutUser}><li>Log Out</li></a>
-    </ul>
-  </div>
-  )
+      <ul>
+        <li><Link to="/profile">Profile</Link></li>
+        {/* <li><Link to="/billing">Billing</Link></li> */}
+        <li onClick={logoutUser}>Log Out</li>
+      </ul>
+    </div>
+  );
 }
 
 function NavBarLogo() {
@@ -82,12 +87,12 @@ function NavBarLinks() {
   } = useAppContext();
   return (
     <div className="navbar-links">
-      <a href="/">Home</a>
+      <Link to="/">Home</Link>
       {user &&
-      <a href="/dashboard">Dashboard</a>
+      <Link to="/dashboard">Dashboard</Link>
       }
-      <a href="/courses">Courses</a>
-      <a href="/contact">Contact</a>
+      <Link to="/courses">Courses</Link>
+      <Link to="/contact">Contact</Link>
     </div>
   )
 }
