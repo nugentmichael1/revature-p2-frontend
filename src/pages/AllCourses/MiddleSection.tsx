@@ -6,6 +6,7 @@ import axios from 'axios';
 
 const MiddleSection = () => {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [keyword, setKeyword] = useState('');
 
   async function getCourses() {
     const response = await axios.get<Course[]>(
@@ -26,13 +27,17 @@ const MiddleSection = () => {
       <div className='flex w-full items-center justify-between gap-4 rounded-lg p-4 shadow-2xl'>
         <FaUserCircle size={40} color='orange' />
         <input
+          value={keyword}
+          onChange={e => setKeyword(e.target.value)}
           placeholder='Search...'
           className='w-full rounded-lg bg-slate-100 px-4 py-2 focus:outline-none'
         />
       </div>
-      {courses.map(c => (
-        <CourseCard key={c.id} course={c} />
-      ))}
+      {courses
+        .filter(c => c.name.toLowerCase().includes(keyword.toLocaleLowerCase()))
+        .map(c => (
+          <CourseCard key={c.id} course={c} />
+        ))}
     </div>
   );
 };
