@@ -12,6 +12,7 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({ password 
   }, [password]);
 
   const calculatePasswordStrength = (password: string) => {
+    if (password.length < 6) {return setPasswordStrength(0)};
     let strength = 0;
     if (password.length > 5) strength += 1;
     if (password.length > 8) strength += 1;
@@ -51,7 +52,7 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({ password 
       case 5:
         return 'Very Strong';
       default:
-        return '';
+        return '\u00A0';
     }
   };
 

@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '../../types/jwtpayload';
 
 export default function SignIn() {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const {
     state: { user },
     setUser,
@@ -13,35 +16,55 @@ export default function SignIn() {
 
   const nav = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: axios request
-    setUser({
-      id: 0,
+    const data = {
       username: username,
-      email: email,
       password: password,
-      role: 'STUDENT',
-    });
-    console.log(`Logged in as username: ${username}`);
+    };
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/user/login`,
+        data,
+      );
+      const token = jwtDecode<JwtPayload>(res.data.accessToken);
+      const userId = Number(token.sub);
+      if (token) {
+        if (isNaN(userId)) {
+          return setErrorMsg('An error occured with token generation.');
+        } else {
+          setUser({
+            id: userId,
+            username: token.username,
+            email: token.email,
+            firstName: token.firstName,
+            lastName: token.lastName,
+            role: token.role.toUpperCase() as
+              | 'STUDENT'
+              | 'EDUCATOR',
+            token: res.data.accessToken,
+          });
+        }
+      } else {
+        return setErrorMsg('Internal error.');
+      }
+    } catch (e: any) {
+      if (axios.isAxiosError(e) && e.response) {
+        setErrorMsg(e.response.data.message || e.response.data || 'An error occurred.');
+      } else {
+        setErrorMsg(e.message || 'An unexpected error occured.');
+      }
+    }
   };
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
-  };
+  const handleInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+    };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  // TODO: implement logout elsewhere
-  useEffect(() => {
-    setUser(null);
-  }, []);
+  const handleUsernameChange = handleInputChange(setUsername);
+  const handlePasswordChange = handleInputChange(setPassword);
 
   useEffect(() => {
     if (user && user.username) {
@@ -97,6 +120,8 @@ export default function SignIn() {
             >
               Sign In
             </button>
+            <p className='col-span-1 mt-2 block text-sm font-medium text-center text-red-700'>{errorMsg}</p>
+
           </div>
         </form>
       </div>

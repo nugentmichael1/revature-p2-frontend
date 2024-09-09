@@ -1,80 +1,151 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '../../contexts/AppContext';
+import CourseProgressBar from '../CourseProgressBar/CourseProgressBar';
 
-type Course = {
+interface Course {
+  id: number;
   name: string;
-  instructor: string;
-  phone: string;
-  email: string;
-  grade: string;
-  status: 'Active' | 'Inactive';
-};
+  description: string;
+  attendanceMethod: string;
+  startDate: Date;
+  endDate: Date;
+}
 
-type CourseTableProps = {
-  person: Person;
-};
+interface CourseTableProps {
+  role: string | undefined;
+  id: number | undefined;
+}
 
-const teacherCourses: Course[] = [
-  { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Active' },
-  { name: 'Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'Not in', status: 'Inactive' }
-];
+const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
+  const [studentProgress, setStudentProgress] = useState<{ [key: number]: number }>({});
+  const { state: { user } } = useAppContext();
+  const nav = useNavigate();
+  const [courses, setCourses] = React.useState<Course[]>([]);
+  console.log('Role:', role, 'ID:', id);
 
-const studentCourses: Course[] = [
-  { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'A', status: 'Active' },
-  { name: 'Student Computer Science', instructor: 'William', phone: '(123) 698 745', email: 'will@rev.com', grade: 'B', status: 'Inactive' }
-];
+  const getStudentProgress = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/progress/user/${user?.id}`);
+      const progressMap = res.data ? res.data.reduce((acc: { [key: number]: number }, item: any) => {
+        acc[item.course.id] = item.completedProgress;
+        return acc;
+      }, {}) : {};
+      setStudentProgress(progressMap);
+    } catch (e: any) {
+      console.log(e);
+    }
+  }
 
-const CourseTable: React.FC<CourseTableProps> = ({ person }) => {
-  const courses = person.role === 'teacher' ? teacherCourses : studentCourses;
+
+  React.useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(
+          role !== 'STUDENT'
+            ? `http://localhost:8080/api/v1/user/${id}/taughtCourses`
+            : `http://localhost:8080/api/v1/user/${id}/enrolledCourses`,
+        );
+        setCourses(response.data);
+        console.log('Courses:', response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+
+    fetchCourses();
+    getStudentProgress();
+  }, []);
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">{person.role === 'teacher' ? 'Courses Taught' : 'Courses Enrolled'}</h2>
-        <div className="flex items-center">
-          <input
-            type="text"
-            placeholder="Search"
-            className="border border-gray-300 rounded-md p-2 mr-4"
-          />
-          <select className="border border-gray-300 rounded-md p-2">
-            <option>Sort by: Newest</option>
-            <option>Sort by: Oldest</option>
-          </select>
-        </div>
+    <div className="p-6 bg-white rounded-lg shadow-lg">
+    <div className="flex justify-between items-center mb-6">
+      <h2 className="text-2xl font-semibold text-gray-800">
+        {role === 'EDUCATOR' ? 'Courses Taught' : 'Courses Enrolled'}
+      </h2>
+      <div className="flex items-center space-x-4">
+        <input
+          type="text"
+          placeholder="Search"
+          className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+        />
+        <select className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+          <option>Sort by: Newest</option>
+          <option>Sort by: Oldest</option>
+        </select>
       </div>
-      <table className="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th className="py-2">Course</th>
-            <th className="py-2">Instructor</th>
-            <th className="py-2">Phone Number</th>
-            <th className="py-2">Email</th>
-            <th className="py-2">Grade</th>
-            <th className="py-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {courses.map((course, index) => (
-            <tr key={index} className="text-center">
-              <td className="py-2">{course.name}</td>
-              <td className="py-2">{course.instructor}</td>
-              <td className="py-2">{course.phone}</td>
-              <td className="py-2">{course.email}</td>
-              <td className="py-2">{course.grade}</td>
-              <td className="py-2">
-                <span
-                  className={`px-2 py-1 rounded-full text-white ${
-                    course.status === 'Active' ? 'bg-green-500' : 'bg-red-500'
-                  }`}
+    </div>
+    <table className="min-w-full bg-gray-80 rounded-lg">
+      <thead>
+        <tr className="bg-gray-200">
+          <th className="py-3 px-4 text-left text-gray-600 font-medium">Name</th>
+          <th className="py-3 px-4 text-left text-gray-600 font-medium">Description</th>
+          <th className="py-3 px-4 text-left text-gray-600 font-medium">Attendance Method</th>
+          <th className="py-3 px-4 text-left text-gray-600 font-medium">Start Date</th>
+          <th className="py-3 px-4 text-left text-gray-600 font-medium">End Date</th>
+          <th className="py-3 px-4 text-left text-gray-600 font-medium">Module</th>
+          {role === "STUDENT" ?
+          <th className="py-3 px-4 text-left text-gray-600 font-medium">Progress</th>
+          :
+          <></>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {courses.map((course, index) => {
+          const startDate = new Date(course.startDate);
+          return (
+            <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
+              <td className="py-3 px-4">{course.name}</td>
+              <td className="py-3 px-4">{course.description}</td>
+              <td className="py-3 px-4">{course.attendanceMethod}</td>
+              <td className="py-3 px-4">
+                {startDate.toLocaleDateString('en-US', {
+                  month: '2-digit',
+                  day: '2-digit',
+                  year: 'numeric',
+                })}
+              </td>
+              <td className="py-3 px-4">
+                {new Date(course.endDate).toLocaleDateString('en-US', {
+                  month: '2-digit',
+                  day: '2-digit',
+                  year: 'numeric',
+                })}
+              </td>
+              <td className="py-3 px-4">
+                <button
+                  onClick={() => nav(`/dashboard/courses/${course.id}`)}
+                  className="px-3 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
                 >
-                  {course.status}
+                  View Module
+                </button>
+              </td>
+              {role === "STUDENT" ? 
+              <td className="py-3 px-4">
+                <span
+                  className={
+                    `px-3 py-1 rounded-full text-sm font-medium ${
+                    startDate >= new Date() ? 'bg-green-500' : ''
+                  } text-white`
+                }
+                >
+                  {startDate >= new Date() ? 'Upcoming' : 
+                  <CourseProgressBar progress={{ completedProgress: studentProgress[course.id] ? studentProgress[course.id] : 0 }}/>
+                  }
                 </span>
               </td>
+            :
+            <></> 
+            }
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+  
   );
 };
 
