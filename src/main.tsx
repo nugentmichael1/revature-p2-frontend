@@ -12,6 +12,8 @@ import Home from './components/Home/Home';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import AllCourses from './pages/AllCourses/AllCourses';
 import CoursePage from './pages/Course/CoursePage';
+import ContactUs from './pages/ContactUs/ContactUs';
+import AboutUs from './pages/AboutUs/AboutUs';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -27,6 +29,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path='/courses' element={<AllCourses />} />
         <Route path="/discussion" element={<DiscussionBoard />} />
         <Route path='/course' element={<CoursePage />} />
+        <Route path='/contactus' element={<ContactUs />} />
+        <Route path='/aboutus' element={<AboutUs />} />
       </Route>
     </Routes>
     </AppProvider>
