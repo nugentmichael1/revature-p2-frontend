@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '../../contexts/AppContext';
+import CourseProgressBar from '../CourseProgressBar/CourseProgressBar';
 
 interface Course {
   id: number;
@@ -19,9 +21,25 @@ interface CourseTableProps {
 
 
 const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
+  const [studentProgress, setStudentProgress] = useState<{ [key: number]: number }>({});
+  const { state: { user } } = useAppContext();
   const nav = useNavigate();
   const [courses, setCourses] = React.useState<Course[]>([]);
   console.log('Role:', role, 'ID:', id);
+
+  const getStudentProgress = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/progress/user/${user?.id}`);
+      const progressMap = res.data ? res.data.reduce((acc: { [key: number]: number }, item: any) => {
+        acc[item.course.id] = item.completedProgress;
+        return acc;
+      }, {}) : {};
+      setStudentProgress(progressMap);
+    } catch (e: any) {
+      console.log(e);
+    }
+  }
+
 
   React.useEffect(() => {
     const fetchCourses = async () => {
@@ -36,6 +54,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
     };
 
     fetchCourses();
+    getStudentProgress();
   }, []);
 
   return (
@@ -65,7 +84,11 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
           <th className="py-3 px-4 text-left text-gray-600 font-medium">Start Date</th>
           <th className="py-3 px-4 text-left text-gray-600 font-medium">End Date</th>
           <th className="py-3 px-4 text-left text-gray-600 font-medium">Module</th>
-          <th className="py-3 px-4 text-left text-gray-600 font-medium">Status</th>
+          {role === "STUDENT" ?
+          <th className="py-3 px-4 text-left text-gray-600 font-medium">Progress</th>
+          :
+          <></>
+          }
         </tr>
       </thead>
       <tbody>
@@ -98,15 +121,23 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
                   View Module
                 </button>
               </td>
+              {role === "STUDENT" ? 
               <td className="py-3 px-4">
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    startDate >= new Date() ? 'bg-green-500' : 'bg-red-500'
-                  } text-white`}
+                  className={
+                    `px-3 py-1 rounded-full text-sm font-medium ${
+                    startDate >= new Date() ? 'bg-green-500' : ''
+                  } text-white`
+                }
                 >
-                  {startDate >= new Date() ? 'Upcoming' : 'Ongoing'}
+                  {startDate >= new Date() ? 'Upcoming' : 
+                  <CourseProgressBar progress={{ completedProgress: studentProgress[course.id] ? studentProgress[course.id] : 0 }}/>
+                  }
                 </span>
               </td>
+            :
+            <></> 
+            }
             </tr>
           );
         })}
