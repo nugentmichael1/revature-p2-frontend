@@ -11,6 +11,9 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import AllCourses from './pages/AllCourses/AllCourses';
 import Exam from './pages/Exam/Exam';
 import CoursePage from './pages/Course/CoursePage';
+import ContactUs from './pages/ContactUs/ContactUs';
+import AboutUs from './pages/AboutUs/AboutUs';
+
 import CreateExam from './pages/CreateExam/CreateExam';
 import CheckoutSuccess from './pages/Checkout/CheckoutSuccess';
 import CheckoutCancel from './pages/Checkout/CheckoutCancel';
@@ -39,6 +42,8 @@ createRoot(document.getElementById('root')!).render(
               path='/dashboard/courses/:courseId'
               element={<CourseBoard />}
             />
+            <Route path='/contactus' element={<ContactUs />} />
+            <Route path='/aboutus' element={<AboutUs />} />
           </Route>
         </Routes>
       </AppProvider>
