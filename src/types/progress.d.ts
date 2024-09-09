@@ -1,4 +1,4 @@
 export interface Progress {
-    completed: boolean;
-    progress: number;
+    completed?: boolean;
+    completedProgress: number;
 }
