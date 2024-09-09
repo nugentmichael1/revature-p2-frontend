@@ -1,9 +1,22 @@
 import React, { useState } from 'react';
 import { FaUser, FaEnvelope, FaBook, FaCreditCard, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
-const LeftSidebar: React.FC = () => {
+
+
+interface LeftSidebarProps {
+  firstName: string | undefined;
+  lastName: string | undefined;
+  role: string | undefined;
+}
+
+const LeftSidebar: React.FC<LeftSidebarProps> = ({firstName,lastName,role }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+ const nav = useNavigate();
+  const handlecoursebttn = () => {
+    nav('/courses');
+  };
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -32,7 +45,7 @@ const LeftSidebar: React.FC = () => {
           </li>
           <li className="flex items-center text-gray-600 hover:text-purple-600">
             <FaBook className="mr-3" />
-            {!isCollapsed && <span>Courses</span>}
+            {!isCollapsed && <span><button onClick={handlecoursebttn}>Courses</button></span>}
           </li>
           <li className="flex items-center text-gray-600 hover:text-purple-600">
             <FaCreditCard className="mr-3" />
@@ -51,8 +64,8 @@ const LeftSidebar: React.FC = () => {
               alt="User avatar"
             />
             <div>
-              <h4 className="text-md font-semibold">William</h4>
-              <p className="text-gray-500 text-sm">Project Manager</p>
+              <h4 className="text-md font-semibold">{firstName+ " " + lastName}</h4>
+              <p className="text-gray-500 text-sm">{role!.substring(1,0) + role!.substring(1)?.toLowerCase() }</p>
             </div>
           </div>
         </div>

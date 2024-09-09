@@ -12,6 +12,10 @@ import AllCourses from './pages/AllCourses/AllCourses';
 import Exam from './pages/Exam/Exam';
 import CoursePage from './pages/Course/CoursePage';
 import CreateExam from './pages/CreateExam/CreateExam';
+import CheckoutSuccess from './pages/Checkout/CheckoutSuccess';
+import CheckoutCancel from './pages/Checkout/CheckoutCancel';
+import Profile from './pages/Profile/Profile';
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -28,6 +32,9 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/exam" element={<Exam />} />
         <Route path="/createexam" element={<CreateExam />} />
         <Route path='/course/:courseId' element={<CoursePage />} />
+        <Route path="/checkout-success" element={<CheckoutSuccess />} />
+        <Route path="/checkout-cancel" element={<CheckoutCancel />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
     </AppProvider>
