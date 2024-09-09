@@ -6,4 +6,4 @@ export interface User {
     lastName: string;
     role: "STUDENT" | "EDUCATOR" | "INSTITUTION";
     token: string;
-  }
+}
