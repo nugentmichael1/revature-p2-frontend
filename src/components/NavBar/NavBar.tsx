@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from '../../contexts/AppContext';
 import { useEffect, useState } from 'react';
 // import axios from "axios";
@@ -56,16 +56,21 @@ function DropdownMenu({ setIsDropdownOpen }: { setIsDropdownOpen: React.Dispatch
     setUser,
   } = useAppContext();
 
+  const nav = useNavigate();
+
   const logoutUser = () => {
     setIsDropdownOpen(false);
     setUser(null);
     // You might want to add logic for navigating to a different page or clearing more state here
+    nav('/');
   };
 
   return (
     <div className="dropdown-menu">
       <ul>
-        <li><Link to="/profile">Profile</Link></li>
+          <Link to="/profile">
+          <li>Profile</li>
+          </Link>
         {/* <li><Link to="/billing">Billing</Link></li> */}
         <li onClick={logoutUser}>Log Out</li>
       </ul>

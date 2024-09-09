@@ -23,7 +23,7 @@ const Home = () => {
 
             <h3 className='text-4xl'>new way to learn</h3>
             <p>
-              Edulife helps students to achieve their goals with the easist and
+              RevLearn helps students to achieve their goals with the easist and
               the cheapest way. If you want to be part of this family. You can
               contact with us.
             </p>
