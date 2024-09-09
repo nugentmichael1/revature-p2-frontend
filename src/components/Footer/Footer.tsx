@@ -1,6 +1,6 @@
-import React from 'react';
+// import React from 'react';
 // import axios from "axios";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import GithubIcon from '../../assets/github-logo.png'
 import '../../index.css'
 import "./Footer.css"
@@ -17,14 +17,14 @@ import "./Footer.css"
 
 function Footer() {
   return (
-    <> 
+    <>
       <footer className="footer">
         <div className="footer-column-side">
           <p>This project was created as our Capstone project for our Java Full Stack Training at Revature</p>
           <br></br>
           <p>Front End: Joshua, Miguel, Diego, Bo Kong, and Bo Bonning</p>
           <br></br>
-          <p>Back End Developers: Trey, Michael, Daniel, Megan, and Ralph</p>
+          <p>Back End Developers: Trey, Michael, Daniel, Megan, Ralph, and Zibin</p>
         </div>
 
         <div className="footer-column-middle">
@@ -39,23 +39,23 @@ function Footer() {
   );
 }
 
-function GithubLink(props) {
-  return (
-    <Link to={props.path} className="github-link" target="_blank">
-        {props.children}
-    </Link>
-  );
-}
+// function GithubLink(props: { path: string, children: any }) {
+//   return (
+//     <Link to={props.path} className="github-link" target="_blank">
+//       {props.children}
+//     </Link>
+//   );
+// }
 
-function GithubLogo(props) {
+function GithubLogo() {
   return (
     <a href="https://github.com/Will-Java-FS/revlearn-frontend-team1">
-      <img 
+      <img
         src={GithubIcon}
         alt="RevLearn Logo"
         loading="lazy"
         id="github-icon"
-        ></img>
+      ></img>
     </a>
     // <Link to={props.path} className="github-link" target="_blank">
     //     {props.children}

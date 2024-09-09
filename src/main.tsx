@@ -18,24 +18,24 @@ import Profile from './pages/Profile/Profile';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-  <BrowserRouter>
-    <AppProvider>
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="/register" element={<SignInRegister />} />
-        <Route path="/login" element={<SignInRegister />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/createcourse" element={<CreateCourse />} />
-        <Route path='/courses' element={<AllCourses />} />
-        <Route path="/exam" element={<Exam />} />
-        <Route path='/course/:courseId' element={<CoursePage />} />
-        <Route path="/checkout-success" element={<CheckoutSuccess />} />
-        <Route path="/checkout-cancel" element={<CheckoutCancel />} />
-        <Route path="/profile" element={<Profile />} />
-      </Route>
-    </Routes>
-    </AppProvider>
-  </BrowserRouter>
+    <BrowserRouter>
+      <AppProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/register" element={<SignInRegister />} />
+            <Route path="/login" element={<SignInRegister />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/createcourse" element={<CreateCourse />} />
+            <Route path='/courses' element={<AllCourses />} />
+            <Route path="/exam" element={<Exam />} />
+            <Route path='/course/:courseId' element={<CoursePage />} />
+            <Route path="/checkout-success" element={<CheckoutSuccess />} />
+            <Route path="/checkout-cancel" element={<CheckoutCancel />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </AppProvider>
+    </BrowserRouter>
   </StrictMode>
 );

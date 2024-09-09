@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useAppContext } from '../../contexts/AppContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // import axios from "axios";
 import '../../index.css'
 import "./Exam.css";

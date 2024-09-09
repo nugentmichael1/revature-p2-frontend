@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAppContext } from '../../contexts/AppContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // import axios from "axios";
 import Logo from '../../assets/RevLEarn-Logo.png'
 import ProfileIcon from '../../assets/profile-icon.png'
@@ -19,7 +19,7 @@ function NavBar() {
 
   const {
     state: { user },
-    setUser,
+    // setUser,
   } = useAppContext();
 
   return (
@@ -51,7 +51,7 @@ function NavBar() {
 
 function DropdownMenu() {
   const {
-    state: { user },
+    // state: { user },
     setUser,
   } = useAppContext();
 
@@ -60,9 +60,9 @@ function DropdownMenu() {
   return (
     <div className="dropdown-menu">
     <ul>
-      <a href="/profile"><li>Profile</li></a>
-      <a href="/billing"><li>Billing</li></a>
-      <a href="/" onClick={logoutUser}><li>Log Out</li></a>
+      <Link to="/profile"><li>Profile</li></Link>
+      <Link to="/billing"><li>Billing</li></Link>
+      <Link to="/" onClick={logoutUser}><li>Log Out</li></Link>
     </ul>
   </div>
   )
@@ -82,12 +82,12 @@ function NavBarLinks() {
   } = useAppContext();
   return (
     <div className="navbar-links">
-      <a href="/">Home</a>
+      <Link to="/">Home</Link>
       {user &&
-      <a href="/dashboard">Dashboard</a>
+      <Link to="/dashboard">Dashboard</Link>
       }
-      <a href="/courses">Courses</a>
-      <a href="/contact">Contact</a>
+      <Link to="/courses">Courses</Link>
+      <Link to="/contact">Contact</Link>
     </div>
   )
 }
