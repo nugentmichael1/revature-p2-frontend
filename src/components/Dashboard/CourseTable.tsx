@@ -18,8 +18,6 @@ interface CourseTableProps {
   id: number | undefined;
 }
 
-
-
 const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
   const [studentProgress, setStudentProgress] = useState<{ [key: number]: number }>({});
   const { state: { user } } = useAppContext();
@@ -44,8 +42,11 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
   React.useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(role === 'EDUCATOR' ? `http://localhost:8080/api/v1/user/${id}/taughtCourses`
-          : `http://localhost:8080/api/v1/user/${id}/enrolledCourses`);
+        const response = await axios.get(
+          role !== 'STUDENT'
+            ? `http://localhost:8080/api/v1/user/${id}/taughtCourses`
+            : `http://localhost:8080/api/v1/user/${id}/enrolledCourses`,
+        );
         setCourses(response.data);
         console.log('Courses:', response.data);
       } catch (error) {
@@ -115,7 +116,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
               </td>
               <td className="py-3 px-4">
                 <button
-                  onClick={() => nav(`/module/${course.id}`)}
+                  onClick={() => nav(`/dashboard/courses/${course.id}`)}
                   className="px-3 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
                 >
                   View Module

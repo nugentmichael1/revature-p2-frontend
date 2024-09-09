@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './index.css';
 import Layout from '../src/pages/Layout/layout';
-import CreateCourse from "./pages/CreateCourse/CreateCourse";
-import SignInRegister from "./pages/SignInRegisterPage/SignInRegisterPage";
-import { AppProvider } from "./contexts/AppContext";
+import CreateCourse from './pages/CreateCourse/CreateCourse';
+import SignInRegister from './pages/SignInRegisterPage/SignInRegisterPage';
+import { AppProvider } from './contexts/AppContext';
 import Home from './components/Home/Home';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import AllCourses from './pages/AllCourses/AllCourses';
@@ -15,29 +15,33 @@ import CreateExam from './pages/CreateExam/CreateExam';
 import CheckoutSuccess from './pages/Checkout/CheckoutSuccess';
 import CheckoutCancel from './pages/Checkout/CheckoutCancel';
 import Profile from './pages/Profile/Profile';
-
+import CourseBoard from './pages/CourseBoard/CourseBoard';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-  <BrowserRouter>
-    <AppProvider>
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="/register" element={<SignInRegister />} />
-        <Route path="/login" element={<SignInRegister />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/createcourse" element={<CreateCourse />} />
-        <Route path='/courses' element={<AllCourses />} />
-        <Route path="/exam/:examId" element={<Exam />} />
-        <Route path="/createexam" element={<CreateExam />} />
-        <Route path='/course/:courseId' element={<CoursePage />} />
-        <Route path="/checkout-success" element={<CheckoutSuccess />} />
-        <Route path="/checkout-cancel" element={<CheckoutCancel />} />
-        <Route path="/profile" element={<Profile />} />
-      </Route>
-    </Routes>
-    </AppProvider>
-  </BrowserRouter>
-  </StrictMode>
+    <BrowserRouter>
+      <AppProvider>
+        <Routes>
+          <Route path='/' element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path='/register' element={<SignInRegister />} />
+            <Route path='/login' element={<SignInRegister />} />
+            <Route path='/dashboard' element={<DashboardPage />} />
+            <Route path='/createcourse' element={<CreateCourse />} />
+            <Route path='/courses' element={<AllCourses />} />
+            <Route path='/exam/:examId' element={<Exam />} />
+            <Route path='/createexam' element={<CreateExam />} />
+            <Route path='/course/:courseId' element={<CoursePage />} />
+            <Route path='/checkout-success' element={<CheckoutSuccess />} />
+            <Route path='/checkout-cancel' element={<CheckoutCancel />} />
+            <Route path='/profile' element={<Profile />} />
+            <Route
+              path='/dashboard/courses/:courseId'
+              element={<CourseBoard />}
+            />
+          </Route>
+        </Routes>
+      </AppProvider>
+    </BrowserRouter>
+  </StrictMode>,
 );
