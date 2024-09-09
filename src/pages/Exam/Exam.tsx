@@ -1,53 +1,53 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAppContext } from '../../contexts/AppContext';
 import { useEffect, useState } from 'react';
-// import axios from "axios";
+import { Exam as ExamType } from "../../types/exam";
+import axios from "axios";
 import '../../index.css'
 import "./Exam.css";
 
 function Exam() {
-    const questions = [
-        {
-            question: "What is the capital of France?",
-            options: ["Berlin", "Madrid", "Paris", "Rome"],
-            answer: "Paris",
-        },
-        {
-            question: "Which is the largest planet in our solar system?",
-            options: ["Earth", "Mars", "Jupiter", "Saturn"],
-            answer: "Jupiter",
-        },
-        {
-            question: "What is the chemical symbol for water?",
-            options: ["H2O", "O2", "CO2", "NaCl"],
-            answer: "H2O",
-        },
-        ];
+    const [exam, setExam] = useState<ExamType>();
+    const questions = exam?.questions;
     
-    const [userAnswers, setUserAnswers] = useState({});
-    const [score, setScore] = useState(null);
+    const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({});
+    const [score, setScore] = useState(0);
     const {state: { user },setUser,} = useAppContext();
 
-    const handleOptionChange = (questionIndex, option) => {
+    const handleOptionChange = (questionIndex: any, option: any) => {
       setUserAnswers({ ...userAnswers, [questionIndex]: option });
     };
   
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       let newScore = 0;
-      questions.forEach((question, index) => {
+      questions?.forEach((question, index) => {
         if (userAnswers[index] === question.answer) {
           newScore++;
         }
       });
       setScore(newScore);
     };
+
+    const getExam = async () => {
+        let { examId } = useParams();
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/exam/${examId}`)
+            setExam(res.data);
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        getExam();
+    },[]);
   
     return (
         <div className="examcontainer">
-            <h1 className="examtitle">Exam Name Here</h1>
+            <h1 className="examtitle">{exam?.title}</h1>
             <form className="questions" onSubmit={handleSubmit}>
-                {questions.map((question, index) => (
+                {questions?.map((question, index) => (
                 <div key={index} className="question">
                     <p>{question.question}</p>
                     {question.options.map((option) => (
@@ -72,7 +72,7 @@ function Exam() {
 
             {score !== null && (
                 <div>
-                <h2>Your Score: {score}/{questions.length}</h2>
+                <h2>Your Score: {score}/{questions?.length}</h2>
                 </div>
             )}
         </div>
