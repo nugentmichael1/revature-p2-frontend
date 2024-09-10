@@ -7,7 +7,7 @@ pipeline {
         GIT_CREDENTIALS = 'github-api-token'
         GIT_URL = 'https://github.com/Will-Java-FS/revlearn-frontend-team1'
         S3_BUCKET = 'revlearn-frontend-build'
-        GIT_BRANCH = 'develop'
+        GIT_BRANCH = 'main'
         SPRING_PORT = '8080'
     }
 
