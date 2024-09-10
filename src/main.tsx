@@ -18,6 +18,7 @@ import CheckoutSuccess from './pages/Checkout/CheckoutSuccess';
 import CheckoutCancel from './pages/Checkout/CheckoutCancel';
 import Profile from './pages/Profile/Profile';
 import CourseBoard from './pages/CourseBoard/CourseBoard';
+import ModuleBoard from './pages/ModuleBoard/ModuleBoard';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -43,6 +44,10 @@ createRoot(document.getElementById('root')!).render(
             />
             <Route path='/contactus' element={<ContactUs />} />
             <Route path='/aboutus' element={<AboutUs />} />
+            <Route
+              path='/dashboard/modules/:moduleId'
+              element={<ModuleBoard />}
+            />
           </Route>
         </Routes>
       </AppProvider>
