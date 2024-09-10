@@ -50,6 +50,7 @@ pipeline {
         stage('Build React App') {
             steps {
                 echo 'Building the React application...'
+                echo "VITE_API_URL=${env.VITE_API_URL}" 
                 withEnv(["VITE_API_URL=${env.VITE_API_URL}"]) {
                     sh 'npm run build'
                 }
