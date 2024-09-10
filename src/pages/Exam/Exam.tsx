@@ -1,5 +1,4 @@
-import { Link, useParams } from "react-router-dom";
-import { useAppContext } from '../../contexts/AppContext';
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { Exam as ExamType } from "../../types/exam";
 import axios from "axios";
@@ -12,7 +11,6 @@ function Exam() {
     
     const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({});
     const [score, setScore] = useState(0);
-    const {state: { user },setUser,} = useAppContext();
 
     const handleOptionChange = (questionIndex: any, option: any) => {
       setUserAnswers({ ...userAnswers, [questionIndex]: option });

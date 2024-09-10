@@ -6,7 +6,7 @@ import CheckoutButton from '../Checkout/CheckoutButton';
 
 const CourseNavBar: React.FC = () => {
     const [active, setActive] = useState("Overview");
-    const [isEnrolled, setIsEnrolled] = useState(false);
+    const [isEnrolled] = useState(false);
 
     return (
         <div>

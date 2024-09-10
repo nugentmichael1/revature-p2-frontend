@@ -46,7 +46,7 @@ const CourseCard = ({ course }: Props) => {
           <div className='flex items-center gap-2'>
             <FaUserCircle size={40} color='orange' />
             <div>
-              {course.educators.map(e => 
+              {course.educators?.map(e => 
                 <p className="text-sm">{e.firstName} {e.lastName}</p>
             )}
               {/* <p className='text-xs text-slate-400'>

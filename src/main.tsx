@@ -32,7 +32,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path='/createcourse' element={<CreateCourse />} />
             <Route path='/courses' element={<AllCourses />} />
             <Route path='/exam/:examId' element={<Exam />} />
-            <Route path='/createexam' element={<CreateExam />} />
+            <Route path='/createexam' element={<CreateExam moduleId={0} />} />
             <Route path='/course/:courseId' element={<CoursePage />} />
             <Route path='/checkout-success' element={<CheckoutSuccess />} />
             <Route path='/checkout-cancel' element={<CheckoutCancel />} />

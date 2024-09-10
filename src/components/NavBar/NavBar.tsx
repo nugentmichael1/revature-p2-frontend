@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from '../../contexts/AppContext';
-import { useEffect, useState } from 'react';
-// import axios from "axios";
+import { useState } from 'react';
 import Logo from '../../assets/RevLEarn-Logo.png'
 import ProfileIcon from '../../assets/profile-icon.png'
 import '../../index.css'
@@ -52,8 +51,7 @@ function NavBar() {
 
 function DropdownMenu({ setIsDropdownOpen }: { setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   const {
-    state: { user },
-    setUser,
+    setUser
   } = useAppContext();
 
   const nav = useNavigate();
