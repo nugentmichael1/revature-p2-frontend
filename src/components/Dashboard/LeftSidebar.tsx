@@ -20,7 +20,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({ firstName, lastName, role }) 
   };
 
   return (
-    <div className={`h bg-white p-4 flex flex-col shadow-lg ${isCollapsed ? 'w-20' : 'w-64'} transition-all duration-300`}>
+    <div className={`min-h-screen bg-white p-4 flex flex-col shadow-lg ${isCollapsed ? 'w-20' : 'w-64'} transition-all duration-300`}>
       <div className="flex justify-between items-center mb-6">
         <h1 className={`text-2xl font-bold ${isCollapsed ? 'hidden' : ''}`}>
           Dashboard

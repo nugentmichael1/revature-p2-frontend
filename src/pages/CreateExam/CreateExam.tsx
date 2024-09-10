@@ -1,23 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import CreateExamForm from "../../components/Exam/CreateExamForm";
+import CreateExamForm from '../../components/Exam/CreateExamForm';
 
-interface CreateExamProps {
-    moduleId?: number;
-  }
-
-const CreateExam: React.FC<CreateExamProps> = ({ moduleId }) => {
-    const nav = useNavigate();
-
-    if (!moduleId) {
-        nav('/');
-    } else {
-        return (
-            <div className="bg-white border border-4 rounded-lg shadow relative m-10 max-w-xl mx-auto">
-                <CreateExamForm moduleId={moduleId} />
-            </div>
-        );
-    }
-
-}
+const CreateExam: React.FC = () => {
+  return (
+    <div className='relative m-10 mx-auto max-w-xl rounded-lg border border-4 bg-white shadow'>
+      <CreateExamForm />
+    </div>
+  );
+};
 
 export default CreateExam;

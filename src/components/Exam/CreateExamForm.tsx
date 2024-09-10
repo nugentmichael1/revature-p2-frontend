@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 interface Question {
   question: string;
@@ -7,13 +8,11 @@ interface Question {
   answer: string;
 }
 
-interface CreateExamFormProps {
-  moduleId: number;
-}
-
-const CreateExamForm: React.FC<CreateExamFormProps> = ({ moduleId }) => {
+const CreateExamForm: React.FC = () => {
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
+
+  let { moduleId } = useParams();
 
   const handleAddQuestion = () => {
     setQuestions([
@@ -51,7 +50,6 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ moduleId }) => {
     e.preventDefault();
     // TODO: add fields to send other information
     const data = {
-        id : 0,
         title: title,
         questions: questions,
         description: "",
