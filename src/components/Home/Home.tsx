@@ -34,7 +34,7 @@ const Home = () => {
               >
                 Join Now
               </Link>
-              <Link to='/contact' className='text-slate-400 underline'>
+              <Link to='/aboutus' className='text-slate-400 underline'>
                 Learn More
               </Link>
             </div>
