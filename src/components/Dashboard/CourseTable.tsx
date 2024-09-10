@@ -44,8 +44,8 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
       try {
         const response = await axios.get(
           role !== 'STUDENT'
-            ? `http://localhost:8080/api/v1/user/${id}/taughtCourses`
-            : `http://localhost:8080/api/v1/user/${id}/enrolledCourses`,
+            ? `${import.meta.env.VITE_API_URL}/user/${id}/taughtCourses`
+            : `${import.meta.env.VITE_API_URL}/user/${id}/enrolledCourses`,
         );
         setCourses(response.data);
         console.log('Courses:', response.data);
@@ -53,6 +53,8 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
         console.error('Error fetching courses:', error);
       }
     };
+
+    
 
     fetchCourses();
     getStudentProgress();

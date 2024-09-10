@@ -2,18 +2,16 @@ import React, { useState } from 'react';
 import { FaUser, FaEnvelope, FaBook, FaCreditCard, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-
-
 interface LeftSidebarProps {
   firstName: string | undefined;
   lastName: string | undefined;
   role: string | undefined;
 }
 
-const LeftSidebar: React.FC<LeftSidebarProps> = ({firstName,lastName,role }) => {
+const LeftSidebar: React.FC<LeftSidebarProps> = ({ firstName, lastName, role }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
- const nav = useNavigate();
+  const nav = useNavigate();
   const handlecoursebttn = () => {
     nav('/courses');
   };
@@ -22,18 +20,17 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({firstName,lastName,role }) => 
   };
 
   return (
-    <div className={`h-screen bg-white p-10 flex flex-col justify-around shadow-lg ${isCollapsed ? 'w-30' : 'w-4064'} transition-all duration-300`}>
-      <div>
-        <div className="flex justify-between items-center mb-10">
-          <h1 className={`text-2xl font-bold flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
-            {!isCollapsed && "Dashboard"} <span className="text-gray-500 ml-1 text-sm">{!isCollapsed}</span>
-          </h1>
-          <button onClick={toggleSidebar} className="focus:outline-none">
-            {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
-          </button>
-        </div>
+    <div className={`h bg-white p-4 flex flex-col shadow-lg ${isCollapsed ? 'w-20' : 'w-64'} transition-all duration-300`}>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className={`text-2xl font-bold ${isCollapsed ? 'hidden' : ''}`}>
+          Dashboard
+        </h1>
+        <button onClick={toggleSidebar} className="focus:outline-none">
+          {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+        </button>
+      </div>
 
-
+      <div className="flex-grow">
         <ul className="space-y-4">
           <li className="flex items-center text-gray-600 hover:text-purple-600">
             <FaUser className="mr-3" />
@@ -55,7 +52,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({firstName,lastName,role }) => 
       </div>
 
       {!isCollapsed && (
-        <div>
+        <div className="flex-shrink-0">
           {/* User Info */}
           <div className="flex items-center mt-5">
             <img
@@ -64,8 +61,8 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({firstName,lastName,role }) => 
               alt="User avatar"
             />
             <div>
-              <h4 className="text-md font-semibold">{firstName+ " " + lastName}</h4>
-              <p className="text-gray-500 text-sm">{role!.substring(1,0) + role!.substring(1)?.toLowerCase() }</p>
+              <h4 className="text-md font-semibold">{firstName + ' ' + lastName}</h4>
+              <p className="text-gray-500 text-sm">{role!.substring(1, 0) + role!.substring(1)?.toLowerCase()}</p>
             </div>
           </div>
         </div>
