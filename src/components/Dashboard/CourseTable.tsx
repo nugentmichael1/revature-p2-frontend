@@ -44,14 +44,16 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
   React.useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(role === 'EDUCATOR' ? `http://localhost:8080/api/v1/user/${id}/taughtCourses`
-          : `http://localhost:8080/api/v1/user/${id}/enrolledCourses`);
+        const response = await axios.get(role === 'EDUCATOR' ? `${import.meta.env.VITE_API_URL}/user/${id}/taughtCourses`
+          : `${import.meta.env.VITE_API_URL}/user/${id}/enrolledCourses`);
         setCourses(response.data);
         console.log('Courses:', response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
       }
     };
+
+    
 
     fetchCourses();
     getStudentProgress();
