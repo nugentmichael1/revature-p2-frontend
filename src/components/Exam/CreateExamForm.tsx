@@ -60,7 +60,7 @@ const CreateExamForm: React.FC<CreateExamFormProps> = ({ moduleId }) => {
         type: "",
     }
     try {
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/exam/module/${moduleId}`, data);
+        await axios.post(`${import.meta.env.VITE_API_URL}/exam/module/${moduleId}`, data);
         console.log("Exam created successfully");
     } catch(e: any) {
         console.log(e);

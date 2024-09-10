@@ -1,6 +1,3 @@
-import React from 'react';
-// import axios from "axios";
-import { Link } from "react-router-dom";
 import GithubIcon from '../../assets/github-logo.png'
 import '../../index.css'
 import "./Footer.css"
@@ -39,15 +36,15 @@ function Footer() {
   );
 }
 
-function GithubLink(props) {
-  return (
-    <Link to={props.path} className="github-link" target="_blank">
-        {props.children}
-    </Link>
-  );
-}
+// function GithubLink(props) {
+//   return (
+//     <Link to={props.path} className="github-link" target="_blank">
+//         {props.children}
+//     </Link>
+//   );
+// }
 
-function GithubLogo(props) {
+function GithubLogo() {
   return (
     <a href="https://github.com/Will-Java-FS/revlearn-frontend-team1">
       <img 
