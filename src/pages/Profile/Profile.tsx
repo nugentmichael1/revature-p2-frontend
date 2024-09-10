@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAppContext } from '../../contexts/AppContext';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import '../../index.css'
 import "./Profile.css";
@@ -10,13 +11,15 @@ function Profile() {
     const {state: { user },setUser,} = useAppContext();
     const [isEditing, setIsEditing] = useState(false); // State to track if we are in edit mode
 
+    const nav = useNavigate();
+
     const toggleEdit = () => {
         setIsEditing(!isEditing);
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUser({ ...user, [name]: value });
+        // const { name, value } = e.target;
+        // setUser({ ...user, [name]: value });
     };
 
     const handleSave = () => {
@@ -25,18 +28,24 @@ function Profile() {
         console.log('User information updated:', user);
     };
 
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            try {
-                const response = await axios.get(`${url}/user/${user.id}`);
-                setUser(response.data);
-                console.log(response.data)
-            } catch (error) {
-                console.error('Error fetching user profile:', error);
-            }
-        };
-        fetchUserProfile();
-    }, []);
+    // useEffect(() => {
+    //     const fetchUserProfile = async () => {
+    //         try {
+    //             const response = await axios.get(`${url}/user/${user.id}`);
+    //             setUser(response.data);
+    //             console.log(response.data)
+    //         } catch (error) {
+    //             console.error('Error fetching user profile:', error);
+    //         }
+    //     };
+    //     fetchUserProfile();
+    // }, []);
+
+    // useEffect(() => {
+    //     if (user && user.username) {
+    //       nav('/');
+    //     }
+    //   }, [user, nav]);
     
     return (
     <div className="profile-page">
