@@ -34,10 +34,10 @@ const MiddleSection = () => {
         />
       </div>
       {courses
-        .filter(c => c.name.toLowerCase().includes(keyword.toLocaleLowerCase()))
-        .map(c => (
-          <CourseCard key={c.id} course={c} />
-        ))}
+        ?.filter(c =>
+          c.name.toLowerCase().includes(keyword.toLocaleLowerCase()),
+        )
+        .map(c => <CourseCard key={c.id} course={c} />)}
     </div>
   );
 };
