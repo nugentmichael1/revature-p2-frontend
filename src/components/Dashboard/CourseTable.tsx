@@ -63,7 +63,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
     <div className="flex justify-between items-center mb-6">
-      <h2 className="text-2xl font-semibold text-gray-800">
+      <h2 className="text-2xl text-orange-500 font-semibold text-gray-800">
         {role === 'EDUCATOR' ? 'Courses Taught' : 'Courses Enrolled'}
       </h2>
       <div className="flex items-center space-x-4">
@@ -81,14 +81,14 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
     <table className="min-w-full bg-gray-80 rounded-lg">
       <thead>
         <tr className="bg-gray-200">
-          <th className="py-3 px-4 text-left text-gray-600 font-medium">Name</th>
-          <th className="py-3 px-4 text-left text-gray-600 font-medium">Description</th>
-          <th className="py-3 px-4 text-left text-gray-600 font-medium">Attendance Method</th>
-          <th className="py-3 px-4 text-left text-gray-600 font-medium">Start Date</th>
-          <th className="py-3 px-4 text-left text-gray-600 font-medium">End Date</th>
-          <th className="py-3 px-4 text-left text-gray-600 font-medium">Module</th>
+          <th className="py-3 px-4 text-left text-orange-500 font-medium">Name</th>
+          <th className="py-3 px-4 text-left text-orange-500 font-medium">Description</th>
+          <th className="py-3 px-4 text-left text-orange-500 font-medium">Attendance Method</th>
+          <th className="py-3 px-4 text-left text-orange-500 font-medium">Start Date</th>
+          <th className="py-3 px-4 text-left text-orange-500 font-medium">End Date</th>
+          <th className="py-3 px-4 text-left text-orange-500 font-medium">Module</th>
           {role === "STUDENT" ?
-          <th className="py-3 px-4 text-left text-gray-600 font-medium">Progress</th>
+          <th className="py-3 px-4 text-left text-orange-500 font-medium">Progress</th>
           :
           <></>
           }
@@ -119,7 +119,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
               <td className="py-3 px-4">
                 <button
                   onClick={() => nav(`/dashboard/courses/${course.id}`)}
-                  className="px-3 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+                  className="px-3 py-2 bg-orange-500 text-white rounded hover:bg-blue-500 transition"
                 >
                   View Module
                 </button>
