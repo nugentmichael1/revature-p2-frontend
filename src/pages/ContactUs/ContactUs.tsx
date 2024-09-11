@@ -4,7 +4,7 @@ const ContactUs = () => {
 
     return (
 
-        <div className="p-5 xsm:p-10">
+        <div className="min-h-screen p-5 xsm:p-10">
     
 
             <div className="text-center space-y-3 mb-10">

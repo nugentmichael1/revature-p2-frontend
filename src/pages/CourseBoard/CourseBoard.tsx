@@ -55,7 +55,7 @@ const CourseBoard = () => {
 
   return (
     <>
-      <div className='section-min-height mx-auto flex max-w-7xl flex-col gap-8 py-24'>
+      <div className='min-h-screen section-min-height mx-auto flex max-w-7xl flex-col gap-8 py-24'>
         <div className='flex items-center gap-4 px-4 text-4xl font-bold text-primary-500'>
           <Link to='/dashboard'>
             <FaArrowLeft />

@@ -7,7 +7,7 @@ const CheckoutSuccess: React.FC = () => {
     return (
         <>
 
-        <div className="flex flex-col items-center bg-gray-50">
+        <div className="min-h-screen flex flex-col items-center bg-gray-50">
             <h1 className="mt-20 mb-8 text-4xl font-bold flex items-center">
                 <img src="/src/assets/checkmark.png" alt="success" className="w-12 h-12 mr-2"></img> 
                 Transaction Successful!
