@@ -4,10 +4,12 @@ import { Exam as ExamType } from "../../types/exam";
 import axios from "axios";
 import '../../index.css'
 import "./Exam.css";
+import { Question } from "../../types/question";
 
-function Exam() {
+const Exam: React.FC = () => {
     const [exam, setExam] = useState<ExamType>();
-    const questions = exam?.questions;
+    const [questions, setQuestions] = useState<Question[]>();
+    const { examId } = useParams();
     
     const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({});
     const [score, setScore] = useState(0);
@@ -28,10 +30,11 @@ function Exam() {
     };
 
     const getExam = async () => {
-        let { examId } = useParams();
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL}/exam/${examId}`)
-            setExam(res.data);
+            const examRes = await axios.get(`${import.meta.env.VITE_API_URL}/exam/${examId}`)
+            setExam(examRes.data);
+            const questionsRes = await axios.get(`${import.meta.env.VITE_API_URL}/exam/${examId}/questions`)
+            setQuestions(questionsRes.data);
         } catch(e) {
             console.log(e);
         }
@@ -42,7 +45,7 @@ function Exam() {
     },[]);
   
     return (
-        <div className="examcontainer">
+        <div className="min-h-screen examcontainer">
             <h1 className="examtitle">{exam?.title}</h1>
             <form className="questions" onSubmit={handleSubmit}>
                 {questions?.map((question, index) => (
