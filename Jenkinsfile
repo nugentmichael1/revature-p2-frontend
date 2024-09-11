@@ -41,7 +41,7 @@ pipeline {
                     script {
                         // Fetch backend URL
                         def backendUrl = sh(script: 'aws secretsmanager get-secret-value --secret-id revlearn/urls --query SecretString --output text | jq -r .backend_url', returnStdout: true).trim()
-                        env.VITE_API_URL = backendUrl + ':' + SPRING_PORT
+                        env.VITE_API_URL = backendUrl + ':' + SPRING_PORT + "/api/v1"
                     }
                 }
             }
