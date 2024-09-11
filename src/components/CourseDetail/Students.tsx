@@ -53,8 +53,8 @@ const Students: React.FC = () => {
     }
 
     return (
-        <div className="min-h-200">
-            <h1>Students</h1>
+        <div>
+            <h1 className="text-4xl font-bold mb-5">Students</h1>
             {students.length > 0 ? (
                 <ul>
                     {students.map((student, index) => (

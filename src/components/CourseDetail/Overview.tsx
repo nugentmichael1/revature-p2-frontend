@@ -34,7 +34,7 @@ const Overview: React.FC = () => {
 
     return (
         <div>
-            <h1 className="text-4xl font-bold">{course?.name}</h1>
+            <h1 className="text-4xl font-bold mb-5">{course?.name}</h1>
             <p>{course?.description}</p>
         </div>
     );
