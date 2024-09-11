@@ -3,10 +3,6 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useAppContext } from '../../contexts/AppContext';
 
-interface Course {
-    id: number;
-}
-
 interface Student {
     firstName: string;
     lastName: string;
@@ -15,7 +11,6 @@ interface Student {
 const Students: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>(); 
     const [students, setStudents] = useState<Student[]>([]); 
-    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
 
@@ -53,8 +48,8 @@ const Students: React.FC = () => {
     }
 
     return (
-        <div className="min-h-200">
-            <h1>Students</h1>
+        <div>
+            <h1 className="text-4xl font-bold mb-5">Students</h1>
             {students.length > 0 ? (
                 <ul>
                     {students.map((student, index) => (

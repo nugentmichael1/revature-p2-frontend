@@ -36,7 +36,7 @@ const CreateCourseForm = () => {
   };
 
   return (
-    <div className='h-screen bg-red-500'>
+    <div className='h-screen bg-slate-50'>
       <div className='grid grid-cols-12 gap-4'>
         <div className='col-span-3'>{/* Navbar */}</div>
         <div className='col-span-6 mt-40'>
