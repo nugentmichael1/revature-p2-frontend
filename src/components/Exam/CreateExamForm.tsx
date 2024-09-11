@@ -51,7 +51,7 @@ const CreateExamForm: React.FC = () => {
     // TODO: add fields to send other information
     const data = {
         title: title,
-        questions: questions,
+        // questions: questions,
         description: "",
         instructions: "",
         duration: 600,
