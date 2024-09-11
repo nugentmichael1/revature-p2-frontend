@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +31,7 @@ const CreateCourseForm = () => {
     };
     axios
       .post(`${import.meta.env.VITE_API_URL}/course`, course, headers)
-      .then((response: any) => nav('/dashboard'))
+      .then(() => nav('/dashboard'))
       .catch((error: any) => console.log(error));
   };
 

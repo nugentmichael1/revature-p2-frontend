@@ -91,7 +91,7 @@ const CourseBoard = () => {
           className='w-fit self-center rounded-md border-2 border-primary-500 px-8 py-2 text-primary-500 hover:bg-primary-500 hover:text-slate-50'
           onClick={() => setIsModalOpen(true)}
         >
-          Add New Section
+          Add New Module
         </button>
       </div>
       {isModalOpen &&

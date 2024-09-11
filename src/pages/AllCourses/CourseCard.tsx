@@ -22,7 +22,7 @@ const CourseCard = ({ course }: Props) => {
 
   return (
     <div
-      className='flex w-full items-center gap-4 rounded-lg p-4 shadow-2xl hover:cursor-pointer hover:-translate-y-1'
+      className='flex w-full items-center gap-4 rounded-lg p-4 shadow-2xl hover:-translate-y-1 hover:cursor-pointer'
       onClick={() => {
         nav(`/course/${course.id}`);
       }}
@@ -46,9 +46,11 @@ const CourseCard = ({ course }: Props) => {
           <div className='flex items-center gap-2'>
             <FaUserCircle size={40} color='orange' />
             <div>
-              {course.educators.map(e => 
-                <p className="text-sm">{e.firstName} {e.lastName}</p>
-            )}
+              {course.educators?.map(e => (
+                <p className='text-sm' key={e.id}>
+                  {e.firstName} {e.lastName}
+                </p>
+              ))}
               {/* <p className='text-xs text-slate-400'>
                 Last updated: a minute ago
               </p> */}

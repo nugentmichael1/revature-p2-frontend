@@ -27,6 +27,7 @@ const CourseNavBar: React.FC = () => {
                         {user && (
                         <button onClick={() => setActive("Students")} className="px-4 py-2 bg-green-500 text-white rounded">Students</button>
                         )}
+
                         {!isEnrolled && courseId && <CheckoutButton courseId={Number(courseId)}/>}
                     </nav>
                 </div>

@@ -1,78 +1,68 @@
-import React from 'react';
-// import axios from "axios";
-import { Link } from "react-router-dom";
-import GithubIcon from '../../assets/github-logo.png'
-import '../../index.css'
-import "./Footer.css"
-
-/**
- *
- * Defines the footer found at the bottom of each webpage. The footer
- * contains extra links for providing the users with extra information
- * and an additional way to navigate the website.
- *
- * Footer with columns and rows containing supplemental links
- * @returns The footer component
- */
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import GithubIcon from '../../assets/github-logo.png';
 
 function Footer() {
+  const [showTeamInfo, setShowTeamInfo] = useState(false);
+
+  const toggleTeamInfo = () => {
+    setShowTeamInfo((prev) => !prev);
+  };
+
   return (
-    <> 
-      <footer className="footer">
-        <div className="footer-column-side">
-          <p>This project was created as our Capstone project for our Java Full Stack Training at Revature</p>
-          <br></br>
-          <p>Front End: Joshua, Miguel, Diego, Bo Kong, and Bo Bonning</p>
-          <br></br>
-          <p>Back End Developers: Trey, Michael, Daniel, Megan, and Ralph</p>
+    <footer className="w-full bg-white p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)] mt-auto border-t border-gray-200">
+      <div className="container mx-auto flex flex-wrap justify-between">
+        {/* Left Side: Project Info or Our Team */}
+        <div className="w-full md:w-1/3 text-center mb-4 md:mb-0">
+          {!showTeamInfo ? (
+            <button
+              onClick={toggleTeamInfo}
+              className="text-secondary-500 hover:underline text-xs"
+            >
+              Our Team
+            </button>
+          ) : (
+            <div>
+              <p className="text-black text-xs leading-4 mb-2">
+                This project was created as our Capstone project for our Java Full Stack Training at Revature
+              </p>
+              <p className="text-black text-xs leading-4 mb-2">
+                Front End: Joshua, Miguel, Diego, Bo Kong, and Bo Bonning
+              </p>
+              <p className="text-black text-xs leading-4 mb-2">
+                Back End Developers: Trey, Michael, Daniel, Megan, and Ralph
+              </p>
+              <button
+                onClick={toggleTeamInfo}
+                className="text-secondary-500 hover:underline text-xs mt-2"
+              >
+                Hide Team Info
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="footer-column-middle">
-          <GithubLogo />
+        {/* Center: GitHub Logo */}
+        <div className="w-full md:w-1/3 text-center mb-4 md:mb-0">
+          <a href="https://github.com/Will-Java-FS/revlearn-frontend-team1" target="_blank" rel="noopener noreferrer">
+            <img
+              src={GithubIcon}
+              alt="GitHub Logo"
+              className="h-12 mx-auto"
+            />
+          </a>
         </div>
 
-        <div className="footer-column-side">
-          <p>Contact us: johndoe@email.com</p>
+        {/* Right Side: Contact Info and Links */}
+        <div className="w-full md:w-1/3 text-center">
+          <div className="flex justify-center space-x-4">
+            <Link to="/contactus" className="text-secondary-500 hover:underline text-xs">Contact Us</Link>
+            <Link to="/aboutus" className="text-secondary-500 hover:underline text-xs">About Us</Link>
+          </div>
         </div>
-      </footer>
-    </>
+      </div>
+    </footer>
   );
 }
-
-function GithubLink(props) {
-  return (
-    <Link to={props.path} className="github-link" target="_blank">
-        {props.children}
-    </Link>
-  );
-}
-
-function GithubLogo(props) {
-  return (
-    <a href="https://github.com/Will-Java-FS/revlearn-frontend-team1">
-      <img 
-        src={GithubIcon}
-        alt="RevLearn Logo"
-        loading="lazy"
-        id="github-icon"
-        ></img>
-    </a>
-    // <Link to={props.path} className="github-link" target="_blank">
-    //     {props.children}
-    // </Link>
-  );
-}
-// function GithubImage() {
-//   return (
-//       <Link to="https://github.com/Will-Java-FS/revlearn-frontend-team1" target="_blank">
-//           <img
-//               src={GithubIcon}
-//               alt="Github Icon"
-//               loading="lazy"
-//               id="github-icon"
-//           />
-//       </Link>
-//   )
-// }
 
 export default Footer;

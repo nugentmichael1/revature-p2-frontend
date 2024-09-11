@@ -1,35 +1,28 @@
-import { Link } from 'react-router-dom';
-import { Module } from '../../types/module';
 import { useState } from 'react';
-import UpdateModuleModal from '../../components/UpdateModuleModal/UpdateModuleModal';
+import { Page } from '../../types/page';
+import UpdatePageModal from '../../components/UpdatePageModal/UpdatePageModal';
+import DeletePageModal from '../../components/DeletePageModal/DeletePageModal';
 import { createPortal } from 'react-dom';
-import DeleteModuleModal from '../../components/DeleteModuleModal/DeleteModuleModal';
 
 type Props = {
-  module: Module;
-  updateCourse: (close: () => void) => Promise<void>;
+  page: Page;
+  updateModule: (close: () => void) => Promise<void>;
 };
 
-const ModuleRow = ({ module, updateCourse }: Props) => {
+const PageRow = ({ page, updateModule }: Props) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   return (
     <>
-      <td className='pl-16 text-left'>{module.orderIndex}</td>
-      <td className='text-left'>{module.title}</td>
+      <td className='pl-16 text-left'>{page.pageNumber}</td>
+      <td className='text-left'>{page.title}</td>
       <td>
         <span className='rounded-md border-2 border-green-200 bg-green-100 px-4 py-2 text-sm text-green-600'>
           Active
         </span>
       </td>
       <td className='flex items-center justify-center gap-4'>
-        <Link
-          to={`/dashboard/modules/${module.id}`}
-          className='rounded-md border-2 border-pink-200 bg-primary-500 px-4 py-2 text-sm text-slate-50'
-        >
-          View
-        </Link>
         <button
           onClick={() => setIsEditModalOpen(true)}
           className='rounded-md border-2 border-blue-200 bg-secondary-500 px-4 py-2 text-sm text-slate-50'
@@ -45,19 +38,19 @@ const ModuleRow = ({ module, updateCourse }: Props) => {
       </td>
       {isEditModalOpen &&
         createPortal(
-          <UpdateModuleModal
+          <UpdatePageModal
             close={() => setIsEditModalOpen(false)}
-            updateCourse={updateCourse}
-            module={module}
+            updateModule={updateModule}
+            page={page}
           />,
           document.body,
         )}
       {isDeleteModalOpen &&
         createPortal(
-          <DeleteModuleModal
+          <DeletePageModal
             close={() => setIsDeleteModalOpen(false)}
-            updateCourse={updateCourse}
-            module={module}
+            updateModule={updateModule}
+            page={page}
           />,
           document.body,
         )}
@@ -65,4 +58,4 @@ const ModuleRow = ({ module, updateCourse }: Props) => {
   );
 };
 
-export default ModuleRow;
+export default PageRow;

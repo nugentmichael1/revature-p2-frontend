@@ -1,11 +1,11 @@
-import CreateExamForm from "../../components/Exam/CreateExamForm";
+import CreateExamForm from '../../components/Exam/CreateExamForm';
 
-const CreateExam = () => {
-    return (
-        <div className="bg-white border border-4 rounded-lg shadow relative m-10 max-w-xl mx-auto">
-            <CreateExamForm />
-        </div>
-    );
-}
+const CreateExam: React.FC = () => {
+  return (
+    <div className='relative m-10 mx-auto max-w-xl rounded-lg border border-4 bg-white shadow'>
+      <CreateExamForm />
+    </div>
+  );
+};
 
 export default CreateExam;
