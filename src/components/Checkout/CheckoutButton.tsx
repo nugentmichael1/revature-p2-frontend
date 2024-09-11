@@ -58,6 +58,7 @@ export default function CheckoutButton({ courseId }: CheckoutButtonProps) {
         courseData,
       );
       if (response.data && response.data.url) {
+        localStorage.setItem('revlearn-courseId', courseId.toString());
         window.location.href = response.data.url;
       } else {
         console.log('Enrollment processed, but no url to payment provided.');
