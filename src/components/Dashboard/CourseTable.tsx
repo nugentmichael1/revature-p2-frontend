@@ -118,7 +118,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
               </td>
               <td className="py-3 px-4">
                 <button
-                  onClick={() => nav(`/dashboard/courses/${course.id}`)}
+                  onClick={() => nav(`/course/${course.id}`)}
                   className="px-3 py-2 bg-orange-500 text-white rounded hover:bg-blue-500 transition"
                 >
                   View Course
