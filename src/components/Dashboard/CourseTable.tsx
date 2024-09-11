@@ -23,7 +23,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
   const { state: { user } } = useAppContext();
   const nav = useNavigate();
   const [courses, setCourses] = React.useState<Course[]>([]);
-  console.log('Role:', role, 'ID:', id);
+  // console.log('Role:', role, 'ID:', id);
 
   const getStudentProgress = async () => {
     try {
@@ -34,7 +34,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
       }, {}) : {};
       setStudentProgress(progressMap);
     } catch (e: any) {
-      console.log(e);
+      console.error(e);
     }
   }
 
@@ -48,7 +48,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ role, id }) => {
             : `${import.meta.env.VITE_API_URL}/user/${id}/enrolledCourses`,
         );
         setCourses(response.data);
-        console.log('Courses:', response.data);
+        // console.log('Courses:', response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
       }

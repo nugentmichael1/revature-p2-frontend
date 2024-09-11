@@ -10,7 +10,7 @@ const DashboardPage: React.FC = () => {
   const userRole = state.user?.role;
   const userId = state.user?.id;
   const navigate = useNavigate(); 
-  console.log(state.user);
+  // console.log(state.user);
 
   useEffect(() => {
     if (!userRole) {

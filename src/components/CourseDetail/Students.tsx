@@ -23,7 +23,7 @@ const Students: React.FC = () => {
 
             try {
                 
-                console.log('Token:', user?.token);
+                // console.log('Token:', user?.token);
 
                 const headers = {
                     headers: {

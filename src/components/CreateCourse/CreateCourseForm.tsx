@@ -32,7 +32,7 @@ const CreateCourseForm = () => {
     axios
       .post(`${import.meta.env.VITE_API_URL}/course`, course, headers)
       .then(() => nav('/dashboard'))
-      .catch((error: any) => console.log(error));
+      .catch((error: any) => console.error(error));
   };
 
   return (

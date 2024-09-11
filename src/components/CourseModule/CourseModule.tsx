@@ -24,7 +24,7 @@ const CourseModule = ({ module }: Props) => {
       `${import.meta.env.VITE_API_URL}/module/${module.id}/pages`,
       { headers: { Authorization: user?.token } },
     );
-    console.log(response.data);
+    // console.log(response.data);
     setPages(response.data);
   }
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface Question {
   question: string;
@@ -12,7 +12,8 @@ const CreateExamForm: React.FC = () => {
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
 
-  let { moduleId } = useParams();
+  const { moduleId } = useParams();
+  const nav = useNavigate();
 
   const handleAddQuestion = () => {
     setQuestions([
@@ -59,9 +60,11 @@ const CreateExamForm: React.FC = () => {
     }
     try {
         await axios.post(`${import.meta.env.VITE_API_URL}/exam/module/${moduleId}`, data);
-        console.log("Exam created successfully");
+        // console.log("Exam created successfully");
     } catch(e: any) {
-        console.log(e);
+        console.error(e);
+    } finally {
+      nav('/dashboard');
     }
   };
 
