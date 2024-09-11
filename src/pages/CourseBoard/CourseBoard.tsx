@@ -25,7 +25,7 @@ const CourseBoard = () => {
       { headers: { Authorization: user?.token } },
     );
 
-    console.log(response.data);
+    // console.log(response.data);
     if (response.data) {
       setModules(response.data);
     }
@@ -37,7 +37,7 @@ const CourseBoard = () => {
       { headers: { Authorization: user?.token } },
     );
 
-    console.log(response.data);
+    // console.log(response.data);
     if (response.data) {
       setCourse(response.data);
     }

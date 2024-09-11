@@ -36,7 +36,7 @@ const Exam: React.FC = () => {
             const questionsRes = await axios.get(`${import.meta.env.VITE_API_URL}/exam/${examId}/questions`)
             setQuestions(questionsRes.data);
         } catch(e) {
-            console.log(e);
+            console.error(e);
         }
     }
 
@@ -73,7 +73,7 @@ const Exam: React.FC = () => {
 
             {score !== null && (
                 <div>
-                <h2>Your Score: {score}/{questions?.length}</h2>
+                {/* <h2>Your Score: {score}/{questions?.length}</h2> */}
                 </div>
             )}
         </div>
