@@ -38,7 +38,7 @@ const DashboardPage: React.FC = () => {
         <div className="text-right mt-4">
           <button 
             onClick={handleClick} 
-            className="px-5 py-2 bg-sky-600 text-white rounded hover:text-purple-600"
+            className="px-5 py-2 bg-orange-500 text-white rounded hover:bg-sky-500"
           >
             Create Course
           </button>

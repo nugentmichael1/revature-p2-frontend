@@ -22,29 +22,29 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({ firstName, lastName, role }) 
   return (
     <div className={`min-h-screen bg-white p-4 flex flex-col shadow-lg ${isCollapsed ? 'w-20' : 'w-64'} transition-all duration-300`}>
       <div className="flex justify-between items-center mb-6">
-        <h1 className={`text-2xl font-bold ${isCollapsed ? 'hidden' : ''}`}>
+        <h1 className={`text-2xl text-orange-500 font-bold ${isCollapsed ? 'hidden' : ''}`}>
           Dashboard
         </h1>
-        <button onClick={toggleSidebar} className="focus:outline-none">
+        <button onClick={toggleSidebar} className="focus:outline-none text-orange-500">
           {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
         </button>
       </div>
 
       <div className="flex-grow">
         <ul className="space-y-4">
-          <li className="flex items-center text-gray-600 hover:text-purple-600">
+          <li className="flex items-center text-gray-600 hover:text-orange-500">
             <FaUser className="mr-3" />
             {!isCollapsed && <span>Profile</span>}
           </li>
-          <li className="flex items-center text-gray-600 hover:text-purple-600">
+          <li className="flex items-center text-gray-600 hover:text-orange-500">
             <FaEnvelope className="mr-3" />
             {!isCollapsed && <span>Mail</span>}
           </li>
-          <li className="flex items-center text-gray-600 hover:text-purple-600">
+          <li className="flex items-center text-gray-600 hover:text-orange-500">
             <FaBook className="mr-3" />
             {!isCollapsed && <span><button onClick={handlecoursebttn}>Courses</button></span>}
           </li>
-          <li className="flex items-center text-gray-600 hover:text-purple-600">
+          <li className="flex items-center text-gray-600 hover:text-orange-500">
             <FaCreditCard className="mr-3" />
             {!isCollapsed && <span>Payment</span>}
           </li>
