@@ -50,8 +50,10 @@ export default function SignIn() {
       }
     } catch (e: any) {
       if (axios.isAxiosError(e) && e.response) {
-        setErrorMsg(e.response.data.message || e.response.data || 'An error occurred.');
+        // console.log('a) axios error? :', e)
+        setErrorMsg(e.response.data.message || 'An error occurred.');
       } else {
+        // console.log('b) other error?: ', e)
         setErrorMsg(e.message || 'An unexpected error occured.');
       }
     }
